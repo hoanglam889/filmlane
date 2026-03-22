@@ -1,0 +1,318 @@
+.movie-detail{
+    background: url(../images/movie-detail-bg.png) no-repeat;
+    background-size: cover;
+    background-position: center;
+    padding: 100px 30px;
+}
+.movie-detail .main{
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+}
+.movie-detail .img{
+    position: relative;
+}
+.movie-detail .img i{
+    position: absolute;
+    left: 36%;
+    top: 39%;
+    font-size: 80px;
+    color: #fff;
+}
+.movie-detail .main .img img{
+    width: 300px;
+    border-radius: 6px;
+}
+.movie-detail .content{
+    max-width: 600px;
+}
+.movie-detail .content strong{
+    font-size: 25px;
+    font-weight: 800;
+    color: #e2d703;
+}
+.movie-detail .content h4{
+    font-size: 50px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0.5rem 0rem;
+}
+.movie-detail .content h4 span{
+    color: #e2d703;
+}
+.movie-detail .content .badge-genre{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    color: #fff;
+}
+.movie-detail .badge-genre .badge span:nth-child(1){
+    background-color: #fff;
+    color: black;
+    font-size: 13px;
+    font-weight: 800;
+    padding: 4px 10px;
+    margin-right: 0.5rem;
+}
+.movie-detail .badge-genre .badge span:nth-child(2){
+    border: 2px solid #fff;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 2px 10px;
+}
+.movie-detail .badge-genre .genre a{
+    text-decoration: none;
+    color: #cecaca;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s ease-in-out;
+}
+.movie-detail .badge-genre .genre a:hover{
+    color: #e2d703;
+}
+.movie-detail .date-time{
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.movie-detail .date-time span{
+    color: #cecaca;
+    font-size: 14px;
+    font-weight: 500;
+}
+.movie-detail .date-time i{
+    color: #e2d703;
+}
+.movie-detail .content p{
+    color: #cecaca;
+    margin-top: 1.5rem;
+    font-size: 14px;
+    font-weight: 500;
+}
+.movie-detail .content .detail-actions{
+    display: flex;
+    padding: 25px;
+    margin-top: 2.5rem;
+    flex-wrap: wrap ;
+    align-items: center;
+    border-radius: 5px;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 400px;
+    background-color: #242c38;
+    border: 1px solid #333333;
+}
+.movie-detail .detail-actions button{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: transparent;
+    cursor: pointer;
+    border: none;
+}
+.movie-detail .detail-actions button:hover span{
+    color: #e2d703;
+}
+.movie-detail .detail-actions button i{
+    color: #fff;
+    font-size: 20px;
+}
+.movie-detail .detail-actions button span{
+    transition: 0.3s ease-in-out;
+    color: #cecaca;
+    font-size: 12px;
+}
+.movie-detail .detail-actions .prime h5{
+    color: #fff;
+    font-size: 16px;
+}
+.movie-detail .detail-actions .prime small{
+    color: #cecaca;
+    font-size: 12px;
+}
+.movie-detail .detail-actions .btn button{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    background-color: transparent;
+    color: #fff;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+    border: 2px solid #e2d703;
+    border-radius: 30px;
+    transition: 0.3s ease-in-out;
+    padding: 13px 30px;
+}
+.movie-detail .detail-actions .btn button:hover{
+    background-color: #e2d703;
+    color: #242c38;
+    font-weight: 700;
+}
+.movie-detail .detail-actions .btn button:hover i{
+    color: #242c38;
+}
+.movie-detail .detail-actions .btn button i{
+    font-size: 13px;
+    transition: 0.3s ease-in-out;
+}
+.movie-detail .download-btn{
+    display: flex;
+    max-width: 100%;
+    justify-content: center;
+    margin-top: 2rem;
+}
+.movie-detail .download-btn a{
+    color: #242c38;
+    text-decoration: none;
+    text-transform: uppercase;
+    background-color: #e2d703;
+    border: none;
+    letter-spacing: 4px;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 15px 30px;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+.movie-detail .download-btn a i{
+    margin-left: 0.5rem;
+}
+/* ================= PLAYER ================= */
+.player-wrapper {
+    width: 100%;
+    background: #000;
+    border-radius: 8px; /* Bo góc nhẹ cho mượt */
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+
+#player {
+    width: 100%;
+    aspect-ratio: 16/9; /* Bắt buộc để video không bị méo hay lùn */
+    object-fit: contain;
+    display: block; /* Tránh viền rác ở dưới đáy video */
+}
+
+/* ================= EPISODE ================= */
+.episode-list {
+    width: 100%;
+    max-height: 450px; /* Giới hạn chiều cao để scroll */
+    overflow-y: auto;
+    padding-right: 5px; /* Để cái thanh cuộn không đè vào chữ */
+}
+
+/* Css cho cái nút (trong ảnh của bạn nó bị mất style) */
+.episode-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px 15px;
+    background: #242c38; /* Màu nền xám xanh tệp với theme */
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.episode-btn:hover {
+    background: #3a4556;
+}
+
+.episode-btn.active {
+    background: #e2d703; /* Màu vàng signature của bạn */
+    color: #111;
+    font-weight: 700;
+    border-color: #e2d703;
+}
+
+/* SCROLLBAR Tùy chỉnh cho ngầu */
+.episode-list::-webkit-scrollbar {
+    width: 5px;
+}
+.episode-list::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 10px;
+}
+.episode-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+.video-container {
+    height: 100vh; /* PC mặc định full cao */
+}
+.episode-sidebar {
+    height: 100vh; /* PC mặc định full cao */
+}
+
+/* ================= STYLE CHUNG CHO CẢ PC VÀ MOBILE MỚI ================= */
+.server-tab-custom {
+    background-color: #3f3f46; /* Màu xám đen của nút server */
+}
+
+/* Custom cái nút X góc phải */
+.close-btn-custom {
+    opacity: 0.8;
+}
+
+/* ================= RESPONSIVE MODAL XỊN CHUẨN APP (MOBILE) ================= */
+.video-container {
+    height: 100vh;
+}
+.episode-sidebar {
+    height: 100vh;
+}
+
+/* Áp dụng cho điện thoại và tablet */
+@media (max-width: 991.98px) {
+    .modal-fullscreen .row {
+        flex-direction: column !important;
+        background-color: #000; /* Nền đen sau lưng video */
+    }
+    
+    /* 1. Ghim Video ở trên cùng */
+    .video-container {
+        height: auto !important;
+        aspect-ratio: 16/9; /* Giữ chuẩn tỷ lệ rạp */
+        width: 100%;
+        flex: 0 0 auto;
+    }
+
+    /* 2. Dấu nút X ở trên video đi (vì app ko có) */
+    .video-container > .btn-close.position-absolute {
+        display: none !important;
+    }
+    
+    /* 3. Khối Danh sách tập phim kéo từ dưới lên (Kiểu Bottom Sheet) */
+    .episode-sidebar {
+        height: calc(100vh - 56.25vw) !important;
+        background-color: #262626 !important; /* Màu nền xám đậm y hình */
+        border-top-left-radius: 16px; /* Bo góc trái trên */
+        border-top-right-radius: 16px; /* Bo góc phải trên */
+        border-left: none; /* Bỏ viền dọc của PC */
+        padding-top: 10px;
+    }
+
+    /* 4. Viền xanh tròn cho nút X của Sidebar */
+    .close-btn-custom {
+        border: 2px solid #0d6efd !important;
+        border-radius: 50%;
+        padding: 8px !important;
+        opacity: 1;
+        transform: scale(0.85); /* Chỉnh size vừa vặn */
+    }
+
+    /* 5. Nút tập phim (Màu xanh, bo góc tròn hơn giống hình) */
+    .episode-btn {
+        border-radius: 8px;
+        font-weight: 600;
+    }
+    
+    .episode-btn.active {
+        background-color: #007bff; /* Màu xanh nước biển sáng */
+        border-color: #007bff;
+    }
+}
