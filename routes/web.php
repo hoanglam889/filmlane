@@ -46,4 +46,4 @@ Route::post('/admin/category/store', [AdminMovieController::class, 'store'])->na
 //GET espisode
 Route::get('/admin/episode', [EpisodeController::class, 'index'])->name('admin.episode_index');
 //GET tập phim của 1 phim
-Route::get('/admin/episode/movie/{movie_id}', [App\Http\Controllers\admin\EpisodeController::class, 'show'])->name('admin.episode.show');
+Route::get('/admin/episode/{movie_id}', [App\Http\Controllers\admin\EpisodeController::class, 'getEpisodes'])->name('admin.episode.get_episodes');

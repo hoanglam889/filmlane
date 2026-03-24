@@ -23,12 +23,12 @@
                 <i class="fa-solid fa-xmark close-sidebar" id="closeSidebar"></i>
             </div>
             <ul class="menu">
-                <li><a href="/admin"><i class="fa-solid fa-gauge"></i> Tổng quan</a></li>
+                <li class="{{ Request::is('admin') ? 'active' : '' }}" ><a href="/admin"><i class="fa-solid fa-gauge"></i> Tổng quan</a></li>
                 <li class="{{ Request::is('admin/movie*') ? 'active' : '' }}">
                     <a href="{{ route('admin.movie.index') }}"><i class="fa-solid fa-film"></i> Quản lý Phim</a>
                 </li>
                 <li><a href="#"><i class="fa-solid fa-list"></i> Danh mục</a></li>
-                <li><a href="{{ route('admin.episode_index') }}"><i class="fa-solid fa-play"></i> Quản lý Tập phim</a></li>
+                <li class="{{ Request::is('admin/episode*') ? 'active' : '' }}"><a href="{{ route('admin.episode_index') }}"><i class="fa-solid fa-play"></i> Quản lý Tập phim</a></li>
                 <li><a href="#"><i class="fa-solid fa-users"></i> Người dùng</a></li>
             </ul>
             <div class="logout">
@@ -41,10 +41,10 @@
             <header class="topbar">
                 <div style="display: flex; align-items: center; gap: 20px;">
                     <i class="fa-solid fa-bars hamburger-menu" id="hamburgerMenu"></i>
-                    <div class="search">
+                    <!-- <div class="search">
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" placeholder="Tìm kiếm phim, người dùng...">
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="user-profile">

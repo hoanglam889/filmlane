@@ -20,8 +20,12 @@ class EpisodeController extends Controller
     {
         $movie = Movie::find($movie_id);
         if(!$movie) return redirect()->back()->with('error', 'Không tìm thấy phim!');
+    }
 
+    public function getEpisodes($movie_id)
+    {
         $episodes = Episode::where('movie_id', $movie_id)->orderBy('episode_number', 'ASC')->get();
-        return view('admin.episode_list', compact('movie', 'episodes'));
+        $count_episodes = count($episodes);
+        return view('admin.episode_list', compact('episodes','count_episodes'));
     }
 }
