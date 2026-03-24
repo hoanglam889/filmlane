@@ -47,3 +47,11 @@ Route::post('/admin/category/store', [AdminMovieController::class, 'store'])->na
 Route::get('/admin/episode', [EpisodeController::class, 'index'])->name('admin.episode_index');
 //GET tập phim của 1 phim
 Route::get('/admin/episode/{movie_id}', [App\Http\Controllers\admin\EpisodeController::class, 'getEpisodes'])->name('admin.episode.get_episodes');
+
+//MỞ TRANG SỬA TẬP
+//Route::get('/admin/episode/{id}/edit', [App\Http\Controllers\admin\EpisodeController::class, 'edit'])->name('admin.episode.edit');
+
+//Mở trang thêm tập
+Route::get('/admin/episode/create/{movie_id}', [EpisodeController::class, 'create'])->name('admin.episode.create');
+//Gửi trang thêm tập
+Route::post('/episode/store', [EpisodeController::class, 'store'])->name('admin.episode.store');

@@ -26,6 +26,30 @@ class EpisodeController extends Controller
     {
         $episodes = Episode::where('movie_id', $movie_id)->orderBy('episode_number', 'ASC')->get();
         $count_episodes = count($episodes);
-        return view('admin.episode_list', compact('episodes','count_episodes'));
+        return view('admin.episode_list', compact('episodes','count_episodes', 'movie_id'));
     }
+
+    public function create($movie_id)
+    {
+        $movie = Movie::findOrFail($movie_id);
+        return view('admin.create_episode', compact('movie'));
+    }
+
+    public function store(Request $request)
+{
+    $request->validate([
+        'movie_id' => 'required|exists:movies,id',
+        'episode_number' => 'required|numeric',
+        'video_link' => 'required',
+    ]);
+
+    Episode::create([
+        'movie_id' => $request->movie_id,
+        'episode_number' => $request->episode_number,
+        'video_link' => $request->video_link,
+        'status' => $request->status ?? 'active', // Mặc định active
+    ]);
+
+    return redirect()->route('admin.episode_index', $request->movie_id)->with('success', 'Thêm tập mới thành công!');
+}
 }

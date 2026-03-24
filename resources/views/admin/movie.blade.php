@@ -13,7 +13,7 @@
                 <input type="text" placeholder="Tìm tên phim...">
             </div>
             
-            <a href="#" class="btn-add">
+            <a href="{{ route('admin.movie.create') }}" class="btn-add">
                 <i class="fa-solid fa-plus"></i> Thêm phim mới
             </a>
         </div>

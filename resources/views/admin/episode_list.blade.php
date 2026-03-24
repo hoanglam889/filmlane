@@ -9,7 +9,7 @@
             <div class="card bg-dark text-white shadow-sm" style="border: 1px solid #333; border-radius: 10px;">
                 <div class="card-header d-flex justify-content-between align-items-center" style="border-bottom: 1px solid #333; padding: 15px 20px;">
                     <h4 class="card-title mb-0" style="font-weight: 600;">Danh sách tập phim</h4>
-                    <a href="#" class="btn-add" style="font-weight: 600; color: #000;">
+                    <a href="{{ route('admin.episode.create', ['movie_id' => $movie_id]) }}" class="btn-add" style="font-weight: 600; color: #000;">
                         <i class="fa-solid fa-plus"></i> Thêm tập mới
                     </a>
                 </div>
