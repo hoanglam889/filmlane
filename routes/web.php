@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 // Controller của trang người dùng
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\IndexController;
 
 // Controller của trang Admin
 use App\Http\Controllers\AdminController;
@@ -55,3 +56,12 @@ Route::get('/admin/episode/{movie_id}', [App\Http\Controllers\admin\EpisodeContr
 Route::get('/admin/episode/create/{movie_id}', [EpisodeController::class, 'create'])->name('admin.episode.create');
 //Gửi trang thêm tập
 Route::post('/episode/store', [EpisodeController::class, 'store'])->name('admin.episode.store');
+
+
+
+//Router lọc phim theo quốc gia
+Route::get('/quoc-gia/{country}', [MovieController::class, 'filter_country'])->name('filter_country');
+//Router lọc phim theo danh mục
+Route::get('/the-loai/{category}', [MovieController::class, 'filter_category'])->name('filter_category');
+
+Route::get('/tim-kiem-ajax', [App\Http\Controllers\IndexController::class, 'searchAjax']);

@@ -24,6 +24,7 @@ class Movie extends Model
         'is_top_rated',
         'is_trending',
         'status',
+        'type',
     ];
     public function episodes()
     {

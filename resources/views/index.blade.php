@@ -31,11 +31,11 @@
           <small>online Streaming</small>
           <h4>Upcoming Movies</h4>
         </div>
-        <div class="buttons">
+        <!-- <div class="buttons">
           <button>Movies</button>
           <button>TV Shows</button>
           <button>Anime</button>
-        </div>
+        </div> -->
       </div>
       <div class="movie-card">
 

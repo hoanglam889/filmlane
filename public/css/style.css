@@ -419,3 +419,80 @@ footer .footer-top{ background: url(../images/footer-bg.jpg) no-repeat; backgrou
     .upcoming-movie .wrapper .movie-carousel{ grid-auto-columns: calc((100%/4) - 15px); }
     .same .wrapper{ grid-template-columns: repeat(4, 1fr); }
 }
+
+
+/* Gắn vị trí tương đối cho thẻ li cha để menu con neo vào đó */
+.site-nav-list .has-dropdown {
+    position: relative;
+}
+
+/* Định dạng menu thả xuống (Mặc định bị ẩn) */
+.site-nav-list .dropdown-menu {
+    position: absolute;
+    top: 100%; /* Nằm sát ngay dưới chữ Phim lẻ/Phim bộ */
+    left: 0;
+    width: 220px;
+    background-color: #171d21; /* Màu tối hợp với web phim */
+    padding: 10px 0;
+    list-style: none;
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    border: 1px solid #2a2a2a;
+    
+    /* Hiệu ứng ẩn hiện mượt mà */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+/* Định dạng các dòng chữ bên trong Dropdown */
+.site-nav-list .dropdown-menu li {
+    display: block;
+    padding: 0;
+}
+.site-nav-list .dropdown-menu li a {
+    display: block;
+    padding: 10px 20px;
+    color: #ccc;
+    font-size: 14px;
+    text-transform: capitalize; /* Không in hoa toàn bộ nữa cho dễ đọc */
+    transition: 0.2s;
+}
+
+/* Hover vào từng mục trong dropdown sẽ sáng lên màu vàng */
+.site-nav-list .dropdown-menu li a:hover {
+    background-color: rgba(226, 215, 3, 0.1);
+    color: #e2d703;
+    padding-left: 25px; /* Thụt vào 1 xíu nhìn cho sang */
+}
+
+/* PHÉP MÀU NẰM Ở ĐÂY: Rà chuột vào LI cha -> Hiện Dropdown con */
+.site-nav-list .has-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.site-nav-list .dropdown-menu {
+        min-width: 180px; 
+        /* Nếu thằng cha đang dùng flex thì thêm dòng này để ép con xếp dọc */
+        flex-direction: column; 
+    }
+
+    /* Ép buộc thẻ li con phải là block (nằm dọc) */
+    .site-nav-list .dropdown-menu li {
+        display: block !important; 
+        width: 100%; 
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Định dạng lại chữ bên trong cho chuẩn */
+    .site-nav-list .dropdown-menu li a {
+        display: block !important; 
+        width: 100%;
+        text-align: left !important; /* Căn trái cho ngay hàng thẳng lối */
+        white-space: nowrap; /* Tuyên án tử hình lỗi rớt chữ (Hành Động sẽ nằm trên 1 dòng) */
+        padding: 8px 24px !important; /* Đẩy cho chữ có không gian thở */
+    }

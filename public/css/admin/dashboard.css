@@ -2,8 +2,12 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 body { background-color: #11141d; color: #cecaca; }
 
-/* Layout chính */
-.admin-container { display: flex; min-height: 100vh; }
+/* ================= LAYOUT CHÍNH (FIX CỨNG MÀN HÌNH) ================= */
+.admin-container { 
+    display: flex; 
+    height: 100vh; /* Khóa chiều cao bằng đúng màn hình */
+    overflow: hidden; /* Cấm cuộn toàn bộ trang web */
+}
 
 /* ================= SIDEBAR ================= */
 .sidebar {
@@ -13,18 +17,28 @@ body { background-color: #11141d; color: #cecaca; }
     display: flex;
     flex-direction: column;
     transition: all 0.3s ease;
+    height: 100vh; /* Sidebar cao bằng màn hình */
+    overflow-y: auto; /* Cho phép cuộn nội bộ nếu menu quá dài */
 }
+
+/* Ẩn/làm mượt thanh cuộn của sidebar */
+.sidebar::-webkit-scrollbar { width: 5px; }
+.sidebar::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+
 .sidebar .logo {
     padding: 25px;
     text-align: center;
     border-bottom: 1px solid #2a2a2a;
+    position: sticky; /* Logo luôn dính trên đầu sidebar khi cuộn menu */
+    top: 0;
+    background-color: #171d21;
+    z-index: 10;
 }
-.sidebar .logo h2 { color: #fff; font-size: 24px; font-weight: 700; }
+.sidebar .logo h2 { color: #fff; font-size: 24px; font-weight: 700; margin: 0; }
 .sidebar .logo h2 span { color: #e2d703; }
 
 .sidebar .menu { list-style: none; padding: 20px 0; flex: 1; }
-
-/* Đã Fix Padding: Canh lề chữ và icon thẳng tắp */
 .sidebar .menu li { padding: 0 15px; margin-bottom: 5px; } 
 .sidebar .menu li a {
     display: flex; align-items: center; gap: 15px;
@@ -38,19 +52,35 @@ body { background-color: #11141d; color: #cecaca; }
 }
 .sidebar .menu li a i { font-size: 18px; width: 25px; text-align: center; }
 
-.sidebar .logout { border-top: 1px solid #2a2a2a; padding: 20px; margin-top: auto; }
-.sidebar .logout a { color: #ff4d4d; }
-.sidebar .logout a:hover { background-color: rgba(255, 77, 77, 0.1); color: #ff4d4d; }
+.sidebar .logout { 
+    border-top: 1px solid #2a2a2a; 
+    padding: 20px; 
+    margin-top: auto;
+    position: sticky; /* Nút đăng xuất luôn nằm đáy sidebar */
+    bottom: 0;
+    background-color: #171d21;
+}
+.sidebar .logout a { color: #ff4d4d; display: flex; align-items: center; gap: 15px; text-decoration: none; padding: 12px 20px; font-weight: 500;}
+.sidebar .logout a:hover { background-color: rgba(255, 77, 77, 0.1); border-radius: 8px; }
 
 /* ================= MAIN CONTENT ================= */
-.main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.main-content { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    height: 100vh; /* Cùng chiều cao với khung ngoài */
+}
 
-/* TOPBAR */
+/* TOPBAR (DÍNH TRÊN ĐẦU) */
 .topbar {
     background-color: #171d21;
     padding: 15px 30px;
     display: flex; justify-content: space-between; align-items: center;
     border-bottom: 1px solid #2a2a2a;
+    position: sticky; /* Dính cứng trên đỉnh */
+    top: 0;
+    z-index: 1000;
+    flex-shrink: 0; /* Không bị bóp méo khi nội dung dưới dài ra */
 }
 .topbar .search { position: relative; width: 300px; }
 .topbar .search input {
@@ -64,11 +94,23 @@ body { background-color: #11141d; color: #cecaca; }
 .topbar .user-profile span { font-size: 14px; font-weight: 600; color: #fff; }
 .topbar .user-profile img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #e2d703; }
 
-/* NỘI DUNG BÊN TRONG */
-.content-wrapper { padding: 30px; overflow-y: auto; }
+/* NỘI DUNG BÊN TRONG (CHỈ PHẦN NÀY ĐƯỢC CUỘN) */
+.content-wrapper { 
+    flex: 1; /* Chiếm hết chiều cao còn lại bên dưới Topbar */
+    padding: 30px; 
+    overflow-y: auto; /* Cuộn dọc ở đây */
+    background-color: #11141d;
+}
+
+/* Tút tát thanh cuộn cho khu vực nội dung chính */
+.content-wrapper::-webkit-scrollbar { width: 8px; }
+.content-wrapper::-webkit-scrollbar-thumb { background: #3b424d; border-radius: 10px; }
+.content-wrapper::-webkit-scrollbar-track { background: transparent; }
+.content-wrapper::-webkit-scrollbar-thumb:hover { background: #e2d703; }
+
 .page-title { color: #fff; font-size: 24px; margin-bottom: 25px; }
 
-/* THỐNG KÊ (CARDS) */
+/* ================= THỐNG KÊ (CARDS) ================= */
 .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 30px; }
 .stat-card {
     background-color: #171d21; border: 1px solid #2a2a2a; border-radius: 10px;
@@ -81,7 +123,7 @@ body { background-color: #11141d; color: #cecaca; }
 .stat-card i { font-size: 40px; color: rgba(226, 215, 3, 0.2); }
 .stat-card:hover i { color: #e2d703; }
 
-/* BẢNG DỮ LIỆU (TABLE) */
+/* ================= BẢNG DỮ LIỆU (TABLE) ================= */
 .data-table-wrapper { background-color: #171d21; border-radius: 10px; padding: 25px; border: 1px solid #2a2a2a; }
 .data-table-wrapper .header-table { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .data-table-wrapper .header-table h3 { color: #fff; }
@@ -133,12 +175,15 @@ table tbody tr:hover { background-color: rgba(255,255,255,0.02); }
 .close-sidebar { display: none; color: #fff; font-size: 24px; cursor: pointer; }
 .hamburger-menu { display: none; color: #fff; font-size: 24px; cursor: pointer; }
 
-/* Đã dọn dẹp, chỉ còn đúng 1 cục Media Query để web chạy nhẹ mượt */
+/* Mobile CSS */
 @media (max-width: 991px) {
-    .sidebar { position: fixed; left: -260px; height: 100%; z-index: 2000; transition: left 0.3s ease; } 
+    .sidebar { position: fixed; left: -260px; height: 100vh; z-index: 2000; transition: left 0.3s ease; } 
     .sidebar.active { left: 0; } 
     .close-sidebar { display: block; }
     .hamburger-menu { display: block; } 
     .topbar .search { display: none; }
     .search-box-movie { display: none; }
 }
+
+
+

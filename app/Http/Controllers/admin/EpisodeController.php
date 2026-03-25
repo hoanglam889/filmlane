@@ -50,6 +50,6 @@ class EpisodeController extends Controller
         'status' => $request->status ?? 'active', // Mặc định active
     ]);
 
-    return redirect()->route('admin.episode_index', $request->movie_id)->with('success', 'Thêm tập mới thành công!');
+    return redirect()->route('admin.episode.get_episodes', $request->movie_id)->with('success', 'Thêm tập mới thành công!');
 }
 }

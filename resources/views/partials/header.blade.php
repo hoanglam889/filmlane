@@ -32,16 +32,47 @@
 
         <ul class="site-nav-list">
           <div class="logo">
-            <a href=""><img src="{{ asset('images/logo.svg') }}" alt=""></a>
-            <button class="close"><i class="fa-solid fa-xmark"></i></button>
+              <a href=""><img src="{{ asset('images/logo.svg') }}" alt=""></a>
+              <button class="close"><i class="fa-solid fa-xmark"></i></button>
           </div>
-          <li class="home"><a href="">home</a></li>
-          <li><a href="">movie</a></li>
-          <li><a href="">tv show</a></li>
-          <li><a href="">web series</a></li>
-          <li><a href="">pricing</a></li>
+          
+          <li class="home"><a href="/">Home</a></li>
+          
+          <li class="has-dropdown">
+              <a href="javascript:void(0)">Thể loại <i class="fa-solid fa-angle-down" style="font-size: 12px; margin-left: 3px;"></i></a>
+              <ul class="dropdown-menu">
+                  @if(isset($categories) && $categories->count() > 0)
+                      @foreach($categories as $cate)
+                          <li><a href="/the-loai/{{ $cate->slug }}">{{ $cate->title }}</a></li>
+                      @endforeach
+                  @else
+                      <li><a href="">Hành Động</a></li>
+                      <li><a href="#">Tình Cảm</a></li>
+                      <li><a href="#">Kinh Dị</a></li>
+                  @endif
+              </ul>
+          </li>
+
+          <li class="has-dropdown">
+              <a href="javascript:void(0)">Quốc gia <i class="fa-solid fa-angle-down" style="font-size: 12px; margin-left: 3px;"></i></a>
+              <ul class="dropdown-menu">
+                  @if(isset($countries) && $countries->count() > 0)
+                      @foreach($countries as $country)
+                          <li><a href="/quoc-gia/{{ $country->slug }}">{{ $country->title }}</a></li>
+                      @endforeach
+                  @else
+                      <li><a href="#">Việt Nam</a></li>
+                      <li><a href="#">Hàn Quốc</a></li>
+                      <li><a href="#">Mỹ</a></li>
+                  @endif
+              </ul>
+          </li>
+
+          <li><a href="/phim-le">Phim lẻ</a></li>
+          <li><a href="/phim-bo">Phim bộ</a></li>
+          
           <a href="{{ url('/login')}}"><button class="site-btn">SIGN IN</button></a>
-        </ul>
+      </ul>
         <div class="hamburger">
           <div class="line"></div>
           <div class="line"></div>

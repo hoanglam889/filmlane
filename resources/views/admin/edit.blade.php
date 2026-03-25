@@ -9,7 +9,8 @@
 
 <form action="{{ route('admin.movie.update', $movie->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
-    @method('PUT') <div class="form-layout">
+    @method('PUT') 
+    <div class="form-layout">
         <div class="form-column left-column">
             <div class="form-group">
                 <label>Tên Phim</label>
@@ -43,6 +44,13 @@
             </div>
 
             <div class="form-row">
+                <div class="form-group">
+                    <label>Loại phim</label>
+                    <select name="type" class="form-control">
+                        <option value="single" {{ $movie->type == 'movie' ? 'selected' : '' }}>Phim Lẻ (Movie)</option>
+                        <option value="series" {{ $movie->type == 'series' ? 'selected' : '' }}>Phim Bộ (Series)</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label>Trạng thái</label>
                     <select name="status" class="form-control">

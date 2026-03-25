@@ -103,6 +103,7 @@ class MovieController extends Controller
         $movie->resolution = $request->resolution;
         $movie->status = $request->status;
         $movie->category_id = $request->category_id;
+        $movie->type = $request->type;
         
         $movie->is_trending = $request->has('is_trending') ? 1 : 0;
         $movie->is_top_rated = $request->has('is_top_rated') ? 1 : 0;
