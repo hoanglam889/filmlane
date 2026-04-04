@@ -125,12 +125,12 @@
         <h4>Trending Movies</h4>
       </div>
       <div class="top-movie-main">
-        <div class="buttons">
+        <!-- <div class="buttons">
           <button>movies</button>
           <button>tv shows</button>
           <button>documentry</button>
           <button>sports</button>
-        </div>
+        </div> -->
         <div class="movie-card">
           <ul class="wrapper">
 

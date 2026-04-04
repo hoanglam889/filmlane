@@ -1,7 +1,7 @@
 <footer>
       <div class="main">
         <div class="footer-top">
-          <nav>
+          <!-- <nav>
             <div class="logo">
               <img src="{{ asset('images/logo.svg') }}" alt="FilmLane Logo">
             </div>
@@ -13,7 +13,7 @@
               <li><a href="javascript:void(0)">Quốc gia</a></li>
             </ul>
           </nav>
-          <hr>
+          <hr> -->
           <div class="links">
             <div class="text-links">
               <a href="#">FAQ</a>
@@ -30,7 +30,7 @@
         </div>
         <div class="footer-bottom">
           <div class="copyright">
-            <p>&#169; 2026 <a href="#">Phan Huynh Hoang Lam (Lamlyy)</a>. All Rights Reserved.</p>
+            <p>&#169; 2026 <a href="#">Hoang Lam 889(Lamlyy)</a>. All Rights Reserved.</p>
           </div>
           <div class="img">
             <img src="{{ asset('images/footer-bottom-img.png') }}" alt="">

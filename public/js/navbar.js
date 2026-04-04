@@ -80,4 +80,12 @@ document.addEventListener('click', function(e) {
         dropdown.classList.remove('active');
     }
 });
+//click vào lại chữ thì đóng
+document.addEventListener('click', function(e) {
+    const searchBox = document.querySelector('.search-box');
+    const dropdown = document.getElementById('searchDropdown');
+    if (searchBox && dropdown && !searchBox.contains(e.target)) {
+        dropdown.classList.remove('active');
+    }
+});
 });
