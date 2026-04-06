@@ -19,7 +19,7 @@
         
         <aside class="sidebar" id="sidebar">
             <div class="logo">
-                <h2>Film<span>Admin</span></h2>
+                <a href="/"><img src="{{ asset('images/logo.svg') }}" alt="" /></a>
                 <i class="fa-solid fa-xmark close-sidebar" id="closeSidebar"></i>
             </div>
             <ul class="menu">
@@ -27,7 +27,8 @@
                 <li class="{{ Request::is('admin/movie*') ? 'active' : '' }}">
                     <a href="{{ route('admin.movie.index') }}"><i class="fa-solid fa-film"></i> Quản lý Phim</a>
                 </li>
-                <li><a href="#"><i class="fa-solid fa-list"></i> Danh mục</a></li>
+                <li class="{{ Request::is('admin/category*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.category') }}"><i class="fa-solid fa-list"></i> Danh mục</a></li>
                 <li class="{{ Request::is('admin/episode*') ? 'active' : '' }}"><a href="{{ route('admin.episode_index') }}"><i class="fa-solid fa-play"></i> Quản lý Tập phim</a></li>
                 <li><a href="#"><i class="fa-solid fa-users"></i> Người dùng</a></li>
             </ul>

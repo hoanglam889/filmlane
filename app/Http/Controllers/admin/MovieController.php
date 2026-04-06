@@ -22,6 +22,7 @@ class MovieController extends Controller
     }
     public function create()
     {
+        //2 dòng này để truy vấn dropdown
         $categories = Category::all();
         $countries = Country::all(); 
 
@@ -47,8 +48,8 @@ class MovieController extends Controller
         $movie->is_trending = $request->is_trending ? 1 : 0; 
         
         // Mặc định cho mấy cái này bằng 0 hoặc 1 nếu DB bắt buộc (sếp tự chỉnh theo DB nha)
-        $movie->is_top_rated = 0; 
-        $movie->is_upcoming = 0;
+        $movie->is_top_rated = $request->is_top_rated ? 1 : 0; 
+        $movie->is_upcoming = $request->is_upcoming ? 1 : 0;
 
         // 3. XỬ LÝ UPLOAD ẢNH BÌA (Tuyệt kỹ nằm ở đây)
         if ($request->hasFile('image')) {

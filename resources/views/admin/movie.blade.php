@@ -25,7 +25,6 @@
                 <tr>
                     <th>Phim</th>
                     <th>Năm</th>
-                    <th>Chất lượng</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
                 </tr>
@@ -37,8 +36,7 @@
                         <img src="{{ asset($movie->image) }}" alt="Poster" class="poster-img">
                         {{ $movie->title }}
                     </td>
-                    <td>{{ $movie->year }}</td>
-                    <td><span class="status">{{ $movie->resolution }}</span></td>
+                    <td>{{ $movie->year }} ({{ $movie->resolution }})</td>
                     
                     <td>
                         @if($movie->status == 'active')

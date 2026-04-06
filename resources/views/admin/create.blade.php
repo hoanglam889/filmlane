@@ -93,6 +93,8 @@
             <div class="form-group" style="margin-top: 25px;">
                 <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
                     <input type="checkbox" name="is_trending" value="1" style="width: 18px; height: 18px;"> Phim đang Trending
+                    <input type="checkbox" name="is_top_rated" value="1" style="width: 18px; height: 18px;"> Phim rated cao
+                    <input type="checkbox" name="is_upcoming" value="1" style="width: 18px; height: 18px;"> Phim chuẩn bị chiếu
                 </label>
             </div>
 

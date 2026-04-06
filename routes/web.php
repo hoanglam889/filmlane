@@ -11,7 +11,7 @@ use App\Http\Controllers\AdminController;
 // THÊM CHỮ "as AdminMovieController" ĐỂ KHÔNG BỊ ĐỤNG HÀNG VỚI THẰNG TRÊN
 use App\Http\Controllers\admin\MovieController as AdminMovieController;
 use App\Http\Controllers\admin\EpisodeController;
-
+use App\Http\Controllers\admin\CategoryController;
 
 Route::get('/', [MovieController::class, 'index']);
 Route::get('/movie-detail/{slug}', [MovieController::class, 'detail']);
@@ -59,9 +59,29 @@ Route::post('/episode/store', [EpisodeController::class, 'store'])->name('admin.
 
 
 
+//Bộ route dùng quản lý danh mục
+//Lấy toàn bộ danh sách
+Route::get('/admin/category', [CategoryController::class, 'index'])->name('admin.category');
+//Mở form thêm danh sách
+Route::get('/admin/category/create', [CategoryController::class, 'create'])->name('admin.category.create');
+//Gửi form thêm danh sách
+Route::post('/admin/category/store', [CategoryController::class, 'store'])->name('admin.category.store');
+//Mở form sửa
+Route::get('/admin/category/edit/{id}', [CategoryController::class, 'edit'])->name('admin.category.edit');
+//gửi form sửa
+Route::put('/admin/category/update/{id}', [CategoryController::class, 'update'])->name('admin.category.update');
+//Gửi form xóa
+Route::delete('/admin/category/destroy/{id}', [CategoryController::class, 'destroy'])->name('admin.category.destroy');
+
+
+
+
+
 //Router lọc phim theo quốc gia
 Route::get('/quoc-gia/{country}', [MovieController::class, 'filter_country'])->name('filter_country');
 //Router lọc phim theo danh mục
 Route::get('/the-loai/{category}', [MovieController::class, 'filter_category'])->name('filter_category');
-
+//Route dùng cho tìm kiếm
 Route::get('/tim-kiem-ajax', [App\Http\Controllers\IndexController::class, 'searchAjax']);
+
+
