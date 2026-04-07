@@ -12,29 +12,27 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
-        });
+        $table->id();
+        $table->string('name');
+        
+        // Cột email giữ nguyên
+        $table->string('email')->unique();
+        $table->timestamp('email_verified_at')->nullable();
+        
+        // 1. Sửa password thành nullable
+        $table->string('password')->nullable();
 
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
+        // 2. Thêm bộ 3 đồ chơi cho Google/Facebook
+        $table->string('provider_id')->nullable();
+        $table->string('provider')->nullable();
+        $table->string('avatar')->nullable();
+        
+        // 3. Thêm cột phân quyền (0: User, 1: Admin)
+        $table->tinyInteger('role')->default(0);
 
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
-        });
+        $table->rememberToken();
+        $table->timestamps();
+    });
     }
 
     /**
