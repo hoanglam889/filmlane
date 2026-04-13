@@ -33,7 +33,15 @@
                 <li><a href="#"><i class="fa-solid fa-users"></i> Người dùng</a></li>
             </ul>
             <div class="logout">
-                <a href="#"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+
+                    <x-responsive-nav-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
+                        Đăng xuất
+                    </x-responsive-nav-link>
+                </form>
             </div>
         </aside>
 
@@ -47,10 +55,15 @@
                         <input type="text" placeholder="Tìm kiếm phim, người dùng...">
                     </div> -->
                 </div>
-
+                
                 <div class="user-profile">
+                    @if(Auth::user()->role == 1)
                     <span>Chào sếp, Admin!</span>
-                    <img src="https://ui-avatars.com/api/?name=Admin&background=e2d703&color=111" alt="Admin">
+                    <img src="{{ asset(Auth::user()->avatar) }}" alt="Admin">
+                    @endif
+                    
+                     @csrf
+                    
                 </div>
             </header>
 

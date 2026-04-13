@@ -496,3 +496,165 @@ footer .footer-top{ background: url(../images/footer-bg.jpg) no-repeat; backgrou
         white-space: nowrap; /* Tuyên án tử hình lỗi rớt chữ (Hành Động sẽ nằm trên 1 dòng) */
         padding: 8px 24px !important; /* Đẩy cho chữ có không gian thở */
     }
+
+
+    /* CSS cho dropdown profile*/
+.site-nav-list .has-dropdown {
+    position: relative;
+}
+
+/* Định dạng menu thả xuống (Mặc định bị ẩn) */
+.site-nav-list .dropdown-menu {
+    position: absolute;
+    top: 100%; /* Nằm sát ngay dưới chữ Phim lẻ/Phim bộ */
+    left: 0;
+    width: 220px;
+    background-color: #171d21; /* Màu tối hợp với web phim */
+    padding: 10px 0;
+    list-style: none;
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    border: 1px solid #2a2a2a;
+    
+    /* Hiệu ứng ẩn hiện mượt mà */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+/* Định dạng các dòng chữ bên trong Dropdown */
+.site-nav-list .dropdown-menu li {
+    display: block;
+    padding: 0;
+}
+.site-nav-list .dropdown-menu li a {
+    display: block;
+    padding: 10px 20px;
+    color: #ccc;
+    font-size: 14px;
+    text-transform: capitalize; /* Không in hoa toàn bộ nữa cho dễ đọc */
+    transition: 0.2s;
+}
+
+/* Hover vào từng mục trong dropdown sẽ sáng lên màu vàng */
+.site-nav-list .dropdown-menu li a:hover {
+    background-color: rgba(226, 215, 3, 0.1);
+    color: #e2d703;
+    padding-left: 25px; /* Thụt vào 1 xíu nhìn cho sang */
+}
+
+/* PHÉP MÀU NẰM Ở ĐÂY: Rà chuột vào LI cha -> Hiện Dropdown con */
+.site-nav-list .has-dropdown:hover .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.site-nav-list .dropdown-menu {
+        min-width: 180px; 
+        /* Nếu thằng cha đang dùng flex thì thêm dòng này để ép con xếp dọc */
+        flex-direction: column; 
+    }
+
+    /* Ép buộc thẻ li con phải là block (nằm dọc) */
+    .site-nav-list .dropdown-menu li {
+        display: block !important; 
+        width: 100%; 
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Định dạng lại chữ bên trong cho chuẩn */
+    .site-nav-list .dropdown-menu li a {
+        display: block !important; 
+        width: 100%;
+        text-align: left !important; /* Căn trái cho ngay hàng thẳng lối */
+        white-space: nowrap; /* Tuyên án tử hình lỗi rớt chữ (Hành Động sẽ nằm trên 1 dòng) */
+        padding: 8px 24px !important; /* Đẩy cho chữ có không gian thở */
+    }
+    .user-menu-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #1a1a1a; /* Màu tối cho hợp web phim */
+        min-width: 160px;
+        box-shadow: 0px 8px 16px rgba(0,0,0,0.5);
+        z-index: 1;
+        border-radius: 4px;
+    }
+
+    .dropdown-content a {
+        color: white;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {background-color: #333;}
+
+    /* Di chuột vào tên là hiện popup */
+    .user-menu-dropdown:hover .dropdown-content {
+        display: block;
+    }
+    /* Style dành riêng cho nút sau khi đã đăng nhập */
+.btn-user-logged {
+    background-color: #171d21; /* Đổi sang màu nền sếp thích */
+    color: #ffffff;             /* Chữ trắng cho thanh lịch */
+    border: 1px solid #2a343b;  /* Viền tối, không dùng viền vàng nữa */
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: 0.3s;
+}
+
+/* Hover vào thì nó sáng nhẹ lên thôi, không cần quá gắt */
+.btn-user-logged:hover {
+    background-color: #242c32;
+    border-color: #e2d703;
+    color: #e2d703;
+}
+
+/* Căn chỉnh lại cái popup cho chuẩn vị trí */
+.user-menu-dropdown .dropdown-content {
+    top: 100%;
+    right: 0;
+    background-color: #171d21;
+    border: 1px solid #2a343b;
+    border-radius: 8px;
+}
+.user-avatar-img {
+    width: 38px;      
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2d703;  
+}
+.btn-user-logged {
+    background-color: #171d21;
+    color: #ffffff;
+    border: 1px solid #2a343b;
+    padding: 5px 20px 5px 5px;
+    border-radius: 40px;      
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: 0.3s;
+}
+.btn-user-logged i.fa-user-circle {
+    font-size: 32px; 
+    color: #e2d703;
+}

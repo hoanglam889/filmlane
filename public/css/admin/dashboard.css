@@ -92,7 +92,16 @@ body { background-color: #11141d; color: #cecaca; }
 
 .topbar .user-profile { display: flex; align-items: center; gap: 15px; }
 .topbar .user-profile span { font-size: 14px; font-weight: 600; color: #fff; }
-.topbar .user-profile img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #e2d703; }
+.topbar .user-profile img { width: 40px; 
+    height: 40px; 
+    border-radius: 50%; 
+    border: 2px solid #e2d703; 
+    
+    object-fit: cover; 
+    object-position: center;
+    
+    display: block;
+}
 
 /* NỘI DUNG BÊN TRONG (CHỈ PHẦN NÀY ĐƯỢC CUỘN) */
 .content-wrapper { 

@@ -13,16 +13,21 @@ use App\Http\Controllers\admin\MovieController as AdminMovieController;
 use App\Http\Controllers\admin\EpisodeController;
 use App\Http\Controllers\admin\CategoryController;
 
-Route::get('/', [MovieController::class, 'index']);
+
+//Khai báo cho API login Google
+use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\FacebookController;
+
+Route::get('/', [MovieController::class, 'index'])-> name('index');
 Route::get('/movie-detail/{slug}', [MovieController::class, 'detail']);
 
 // Auth Controller
-Route::get('/login', [AuthController::class, 'indexLogin']);
-
-
+//Route::get('/login', [AuthController::class, 'indexLogin']);
 
 // CÁC ROUTE ADMIN
-Route::get('/admin', [AdminController::class, 'indexAdmin']);
+Route::middleware(['auth', 'admin'])->group(function () {
+
+Route::get('/admin', [AdminController::class, 'indexAdmin'])->name('indexAdmin');
 
 
 
@@ -72,6 +77,8 @@ Route::get('/admin/category/edit/{id}', [CategoryController::class, 'edit'])->na
 Route::put('/admin/category/update/{id}', [CategoryController::class, 'update'])->name('admin.category.update');
 //Gửi form xóa
 Route::delete('/admin/category/destroy/{id}', [CategoryController::class, 'destroy'])->name('admin.category.destroy');
+});
+
 
 
 
@@ -84,4 +91,13 @@ Route::get('/the-loai/{category}', [MovieController::class, 'filter_category'])-
 //Route dùng cho tìm kiếm
 Route::get('/tim-kiem-ajax', [App\Http\Controllers\IndexController::class, 'searchAjax']);
 
+//route call API google
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
+// Facebook Login
+Route::get('auth/facebook', [FacebookController::class, 'redirectToFacebook'])->name('facebook.login');
+Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebookCallback']);
+
+//route của php beeze
+require __DIR__.'/auth.php';

@@ -71,7 +71,35 @@
           <li><a href="/phim-le">Phim lẻ</a></li>
           <li><a href="/phim-bo">Phim bộ</a></li>
           
-          <a href="{{ url('/login')}}"><button class="site-btn">SIGN IN</button></a>
+          @if(Auth::check())
+            <li class="user-menu-dropdown">
+                <button class="btn-user-logged">
+                    @if(Auth::user()->avatar)
+                        <img src="{{ asset(Auth::user()->avatar) }}" alt="avatar" class="user-avatar-img">
+                    @else
+                        <i class="fa fa-user-circle" style="color: #e2d703; font-size: 20px;"></i> 
+                    @endif
+                    
+                    <span>{{ Auth::user()->name }}</span>
+                    <i class="fa fa-angle-down" style="font-size: 12px; opacity: 0.6;"></i>
+                </button>
+                
+                <div class="dropdown-content">
+                    @if(Auth::user()->role == 1)
+                        <a href="{{ route('indexAdmin') }}"><i class="fa fa-dashboard"></i> Quản trị</a>
+                    @endif
+                    <a href="#"><i class="fa fa-id-card"></i> Thông tin cá nhân</a>
+                    <hr style="border-color: #333; margin: 5px 0;">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Đăng xuất</a>
+                    </form>
+                </div>
+            </li>
+        @else
+            <li><a href="{{ route('login') }}" class="site-btn">Đăng nhập</a></li>
+        @endif
+          
       </ul>
         <div class="hamburger">
           <div class="line"></div>

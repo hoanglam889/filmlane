@@ -13,6 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         //
     })
+    //Setup cho Middleware
+    ->withMiddleware(function (Middleware $middleware) {
+        // Đăng ký bí danh 'admin' ở ĐÂY
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminMiddleware::class,
+        ]);
+    })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
+    
