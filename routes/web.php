@@ -99,5 +99,9 @@ Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallba
 Route::get('auth/facebook', [FacebookController::class, 'redirectToFacebook'])->name('facebook.login');
 Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebookCallback']);
 
+// API Routes for Like/Save functionality
+Route::get('/api/check-auth', [App\Http\Controllers\MovieController::class, 'checkAuth']);
+Route::post('/api/toggle-like', [App\Http\Controllers\MovieController::class, 'toggleLike'])->middleware('auth');
+
 //route của php beeze
 require __DIR__.'/auth.php';

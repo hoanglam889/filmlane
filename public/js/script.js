@@ -116,3 +116,55 @@ if (backbtn) {
     };
     backbtn.addEventListener("click", scrollWindow);
 }
+
+// ================= LIKE/SAVE MOVIE FUNCTIONALITY =================
+document.querySelectorAll(".like-btn").forEach(btn => {
+    btn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const movieId = btn.dataset.movieId;
+        const isLiked = btn.classList.contains("liked");
+        
+        // Check if user is logged in
+        try {
+            const response = await fetch("/api/check-auth");
+            const data = await response.json();
+            
+            if (!data.authenticated) {
+                alert("Vui lòng đăng nhập để lưu phim!");
+                window.location.href = "/login";
+                return;
+            }
+            
+            // Send like/unlike request
+            const likeResponse = await fetch("/api/toggle-like", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                body: JSON.stringify({
+                    movie_id: movieId,
+                    action: isLiked ? "unlike" : "like"
+                })
+            });
+            
+            const likeData = await likeResponse.json();
+            
+            if (likeData.success) {
+                btn.classList.toggle("liked");
+                // Solid heart if liked, regular if not
+                const icon = btn.querySelector("i");
+                if (isLiked) {
+                    icon.classList.remove("fa-solid");
+                    icon.classList.add("fa-regular");
+                } else {
+                    icon.classList.remove("fa-regular");
+                    icon.classList.add("fa-solid");
+                }
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Có lỗi xảy ra. Vui lòng thử lại!");
+        }
+    });
+});

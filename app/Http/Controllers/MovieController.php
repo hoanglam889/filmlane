@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Episode;
 use App\Models\Country;
+use App\Models\Favorite;
+use Illuminate\Support\Facades\Auth;
+
 class MovieController extends Controller
 {
     public function index()
@@ -45,4 +48,63 @@ class MovieController extends Controller
         $category_name = $category->title;
         return view('filter_movie', compact('movies', 'category_name'));
     }
+
+    /**
+     * Check if user is authenticated
+     */
+    public function checkAuth()
+    {
+        return response()->json([
+            'authenticated' => Auth::check()
+        ]);
+    }
+
+    /**
+     * Toggle like/save for a movie
+     */
+    public function toggleLike(Request $request)
+    {
+        // Validate input
+        $request->validate([
+            'movie_id' => 'required|exists:movies,id',
+            'action' => 'required|in:like,unlike'
+        ]);
+
+        $user = Auth::user();
+        $movieId = $request->movie_id;
+        $action = $request->action;
+
+        try {
+            if ($action === 'like') {
+                // Check if already liked
+                $existing = Favorite::where('user_id', $user->id)
+                                ->where('movie_id', $movieId)
+                                ->first();
+
+                if (!$existing) {
+                    // Create new favorite
+                    Favorite::create([
+                        'user_id' => $user->id,
+                        'movie_id' => $movieId
+                    ]);
+                }
+            } else {
+                // Unlike - remove the favorite
+                Favorite::where('user_id', $user->id)
+                    ->where('movie_id', $movieId)
+                    ->delete();
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => $action === 'like' ? 'Đã lưu phim' : 'Đã bỏ lưu phim'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Có lỗi xảy ra: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }
+

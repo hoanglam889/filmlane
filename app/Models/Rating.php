@@ -8,3 +8,4 @@ class Rating extends Model
 {
     //
 }
+

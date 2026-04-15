@@ -89,3 +89,26 @@ document.addEventListener('click', function(e) {
     }
 });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const userBtn = document.getElementById('userMobileBtn');
+    const dropdown = document.getElementById('userDropdownContent');
+
+    if(userBtn && dropdown) {
+        userBtn.addEventListener('click', function(e) {
+            // Ngăn việc click bị "trượt" hoặc ảnh hưởng tới các thành phần khác
+            e.preventDefault(); 
+            e.stopPropagation();
+
+            // Bật/tắt class 'show' để hiện/ẩn menu
+            dropdown.classList.toggle('show');
+        });
+
+        // Nếu click ra ngoài vùng menu thì tự động ẩn nó đi (rất tiện)
+        document.addEventListener('click', function(event) {
+            if (!userBtn.contains(event.target) && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    }
+});
