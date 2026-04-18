@@ -9,7 +9,6 @@ use App\Models\Episode;
 use App\Models\Country;
 use App\Models\Favorite;
 use Illuminate\Support\Facades\Auth;
-
 class MovieController extends Controller
 {
     public function index()
@@ -106,5 +105,6 @@ class MovieController extends Controller
             ], 500);
         }
     }
+
 }
 

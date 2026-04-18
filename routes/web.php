@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\UserController;
 
 // Controller của trang Admin
 use App\Http\Controllers\AdminController;
@@ -21,6 +22,8 @@ use App\Http\Controllers\FacebookController;
 Route::get('/', [MovieController::class, 'index'])-> name('index');
 Route::get('/movie-detail/{slug}', [MovieController::class, 'detail']);
 
+Route::get('/history', [MovieController::class, 'FilmHistory'])-> name('history');
+Route::get('/favorites', [UserController::class, 'get_film_favories'])-> name('favorites');
 // Auth Controller
 //Route::get('/login', [AuthController::class, 'indexLogin']);
 

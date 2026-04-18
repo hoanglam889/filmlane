@@ -224,7 +224,8 @@ html, body {
 .movie-carousel.dragging .card { cursor: grab; user-select: none; }
 .movie-carousel :where(.card) { display: flex; justify-content: center; align-items: center; }
 .movie-carousel .card { scroll-snap-align: start; list-style: none; background: transparent; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
-.movie-carousel .card .img img{ width: 100%; object-fit: cover; border-radius: 10px; }
+.movie-carousel .card .img { width: 100%; aspect-ratio: 2/3; overflow: hidden; border-radius: 10px; }
+.movie-carousel .card .img img{ width: 100%; height: 100%; object-fit: contain; border-radius: 10px; }
 .movie-carousel .card .title{ display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; width: 100%; }
 .movie-carousel .card .title a{ color: #fff; text-decoration: none; transition: 0.3s ease-in-out; }
 .movie-carousel .card .title a:hover{ color: #e2d703; }
@@ -263,7 +264,8 @@ html, body {
 .top-movie .top-movie-main .buttons button:is(:hover,:focus) { color: #e2d703; text-shadow: 0 3px 25px hsl(57deg 97% 45% / 50%); }
 .same .wrapper{ display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; justify-content: center; row-gap: 50px; column-gap: 30px; margin-top: 3rem; }
 .same .wrapper .card{ width: 100%; }
-.movie-card .card .img img{ width: 100%; object-fit: cover; border-radius: 6px; }
+.movie-card .card .img { width: 100%; aspect-ratio: 2/3; overflow: hidden; border-radius: 6px; }
+.movie-card .card .img img{ width: 100%; height: 100%; object-fit: contain; border-radius: 6px; }
 .movie-card .card .title{ display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; width: 100%; }
 .movie-card .card .title a{ color: #fff; text-decoration: none; transition: 0.3s ease-in-out; }
 .movie-card .card .title a:hover{ color: #e2d703; }
@@ -716,3 +718,117 @@ footer .footer-top{ background: url(../images/footer-bg.jpg) no-repeat; backgrou
     .dropdown-content.show {
         display: block !important;
     }
+
+    
+
+    /* ================= CSS CHO CARD NẰM NGANG ================= */
+.list-layout {
+    display: flex;
+    flex-direction: column; /* Xếp dọc các thẻ nằm ngang */
+    gap: 20px;
+    padding: 0;
+    list-style: none;
+}
+
+.card-horizontal {
+    display: flex;
+    background-color: #171d21; /* Màu nền hơi sáng hơn nền web 1 chút */
+    border: 1px solid #2a343b;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: 0.3s ease;
+}
+
+.card-horizontal:hover {
+    border-color: #e2d703;
+    transform: translateX(5px); /* Hiệu ứng trượt nhẹ sang phải khi hover */
+}
+
+/* Phần Ảnh */
+.card-horizontal .img-box {
+    width: 200px; /* Cố định chiều rộng ảnh */
+    flex-shrink: 0;
+}
+.card-horizontal .img-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 2/3;
+}
+
+/* Phần Thông tin */
+.card-horizontal .info-box {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.card-horizontal .top-info h4 {
+    color: #fff;
+    font-size: 22px;
+    margin-bottom: 5px;
+    transition: 0.2s;
+}
+.card-horizontal .top-info a { text-decoration: none; }
+.card-horizontal .top-info h4:hover { color: #e2d703; }
+.card-horizontal .year { color: #888; font-size: 14px; }
+
+.card-horizontal .meta-info {
+    display: flex;
+    gap: 15px;
+    color: #ccc;
+    font-size: 13px;
+    margin: 10px 0;
+}
+.card-horizontal .quality {
+    border: 1px solid #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #e2d703;
+    border-color: #e2d703;
+}
+.card-horizontal .rating i { color: #e2d703; }
+.card-horizontal .description { color: #888; font-size: 14px; margin-bottom: 15px;}
+
+/* Nút bấm */
+.card-horizontal .action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: auto;
+}
+.card-horizontal .btn-watch {
+    background-color: #e2d703;
+    color: #111;
+    padding: 8px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s;
+}
+.card-horizontal .btn-watch:hover { background-color: #fff; }
+
+.card-horizontal .btn-remove {
+    background-color: transparent;
+    color: #ff4d4d;
+    border: 1px solid #ff4d4d;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+.card-horizontal .btn-remove:hover {
+    background-color: #ff4d4d;
+    color: #fff;
+}
+
+/* Responsive Mobile: Chuyển về dọc nếu màn hình quá nhỏ */
+@media (max-width: 600px) {
+    .card-horizontal { flex-direction: column; }
+    .card-horizontal .img-box { width: 100%; aspect-ratio: 16/9;} /* Cắt ảnh ngang cho đẹp trên mobile */
+    .card-horizontal .action-buttons { flex-direction: column; }
+    .card-horizontal .btn-watch, .card-horizontal .btn-remove { text-align: center; }
+}

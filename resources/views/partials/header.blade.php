@@ -37,8 +37,6 @@
               <button class="close"><i class="fa-solid fa-xmark"></i></button>
           </div>
           
-          <li class="home"><a href="/">Home</a></li>
-          
           <li class="has-dropdown">
               <a href="javascript:void(0)">Thể loại <i class="fa-solid fa-angle-down" style="font-size: 12px; margin-left: 3px;"></i></a>
               <ul class="dropdown-menu">
@@ -89,11 +87,18 @@
             @if(Auth::user()->role == 1)
                 <a href="{{ route('indexAdmin') }}"><i class="fa fa-dashboard"></i> Quản trị</a>
             @endif
+            
             <a href="#"><i class="fa fa-id-card"></i> Thông tin cá nhân</a>
+            <a href="#"><i class="fa fa-heart"></i> Phim đã thích</a>
+            <a href="#"><i class="fa fa-history"></i> Lịch sử xem phim</a>
+            
             <hr style="border-color: #333; margin: 5px 0;">
+            
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">Đăng xuất</a>
+                <a href="#" onclick="event.preventDefault(); this.closest('form').submit();">
+                    <i class="fa fa-sign-out"></i> Đăng xuất
+                </a>
             </form>
         </div>
     </li>
