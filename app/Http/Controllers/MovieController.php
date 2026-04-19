@@ -8,6 +8,7 @@ use App\Models\Movie;
 use App\Models\Episode;
 use App\Models\Country;
 use App\Models\Favorite;
+use App\Models\WatchHistory;
 use Illuminate\Support\Facades\Auth;
 class MovieController extends Controller
 {
@@ -104,6 +105,18 @@ class MovieController extends Controller
                 'message' => 'Có lỗi xảy ra: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function FilmHistory()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để xem lịch sử.');
+        }
+
+        $user = Auth::user();
+        $movies = $user->watchedHistory()->orderBy('watch_histories.updated_at', 'desc')->get();
+
+        return view('user.history', compact('movies'));
     }
 
 }

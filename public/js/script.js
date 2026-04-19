@@ -168,3 +168,57 @@ document.querySelectorAll(".like-btn").forEach(btn => {
         }
     });
 });
+
+
+//SAVE HISTORY
+document.addEventListener("DOMContentLoaded", function() {
+    let isSaved = false;
+
+    document.body.addEventListener('click', function(event) {
+        // 1. Tìm xem sếp có click trúng 1 trong 3 thằng này không:
+        // - Nút Xem phim (.btn-save-history)
+        // - Tab Server (.server-tab-custom)
+        // - Icon tròn trên ảnh (.fa-circle-play)
+        const target = event.target.closest('.btn-save-history, .server-tab-custom, .fa-circle-play');
+
+        if (target) {
+            if (isSaved) return;
+
+            // 2. Kỹ thuật lấy ID "Xuyên thấu": 
+            // Nếu thằng vừa bấm không có data-movie-id, nó sẽ tìm ở thằng con hoặc thằng bố gần nhất
+            let movieId = target.getAttribute('data-movie-id') || 
+                          target.querySelector('[data-movie-id]')?.getAttribute('data-movie-id');
+
+            if (!movieId) {
+                console.error("❌ Không tìm thấy ID phim! Sếp check lại HTML xem đã gắn data-movie-id chưa.");
+                return;
+            }
+
+            const token = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (!token) {
+                console.error("❌ Thiếu Token CSRF trên Header!");
+                return;
+            }
+
+            console.log("🚀 Đã tóm được phim ID: " + movieId + ". Chờ 5 giây để lưu...");
+
+            setTimeout(() => {
+                fetch('/user/save-history', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({ movie_id: movieId })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log("✅ LƯU THÀNH CÔNG: " + data.message);
+                    isSaved = true;
+                })
+                .catch(err => console.error("❌ LỖI POST:", err));
+            }, 5000);
+        }
+    });
+});

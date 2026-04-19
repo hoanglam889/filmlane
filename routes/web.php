@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\UserController;
 
+
 // Controller của trang Admin
 use App\Http\Controllers\AdminController;
 // THÊM CHỮ "as AdminMovieController" ĐỂ KHÔNG BỊ ĐỤNG HÀNG VỚI THẰNG TRÊN
@@ -24,6 +25,9 @@ Route::get('/movie-detail/{slug}', [MovieController::class, 'detail']);
 
 Route::get('/history', [MovieController::class, 'FilmHistory'])-> name('history');
 Route::get('/favorites', [UserController::class, 'get_film_favories'])-> name('favorites');
+Route::post('/user/save-history', [App\Http\Controllers\UserController::class, 'saveHistory'])->name('user.save_history');
+Route::delete('/user/remove-history/{movie_id}', [App\Http\Controllers\UserController::class, 'removeHistory'])->name('user.remove_history');
+
 // Auth Controller
 //Route::get('/login', [AuthController::class, 'indexLogin']);
 

@@ -1,5 +1,7 @@
 @section('bootstrap')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    {{-- Thêm meta token ở đây cho chắc cú nếu header sếp lỗi --}}
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 
 @include('partials.header')
@@ -7,8 +9,10 @@
     <section class="movie-detail">
         <div class="main">
             <div class="img">
-                <a href=""><img src="{{ asset($movie -> image) }}" alt=""></a>
-                <i class="fa-regular fa-circle-play" 
+                <a href=""><img src="{{ asset($movie->image) }}" alt=""></a>
+                {{-- FIX 1: Thêm class btn-save-history và data-movie-id vào icon tròn --}}
+                <i class="fa-regular fa-circle-play btn-save-history" 
+                  data-movie-id="{{ $movie->id }}"
                   data-bs-toggle="modal" 
                   data-bs-target="#movieModal" 
                   style="cursor: pointer; z-index: 3;">
@@ -16,11 +20,11 @@
             </div>
             <div class="content">
                 <strong>New Episodes</strong>
-                <h4>{{ $movie -> title}}</h4>
+                <h4>{{ $movie->title }}</h4>
                 <div class="badge-genre">
                     <div class="badge">
                         <span>PG 13</span>
-                        <span>{{ $movie -> resolution}}  </span>
+                        <span>{{ $movie->resolution }}  </span>
                     </div>
                     <div class="genre">
                         <a href="">Comedy</a>,
@@ -30,10 +34,10 @@
                     </div>
                 </div>
                 <div class="date-time">
-                    <span><i class="fa-solid fa-calendar-days"></i> {{ $movie -> year}}</span>
+                    <span><i class="fa-solid fa-calendar-days"></i> {{ $movie->year }}</span>
                     <span><i class="fa-regular fa-clock"></i> 115 min</span>
                 </div>
-                <p>{{ $movie -> description}}</p>
+                <p>{{ $movie->description }}</p>
                 <div class="detail-actions">
                   <button>
                     <i class="bi bi-share-fill"></i>
@@ -44,7 +48,13 @@
                     <small>Streaming Channels</small>
                   </div>
                   <div class="btn">
-                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#movieModal"><i class="fa-solid fa-play"></i> Xem phim</button>
+                      {{-- FIX 2: Nút đỏ đã có class và data-id --}}
+                      <button class="btn btn-danger btn-save-history" 
+                              data-movie-id="{{ $movie->id }}" 
+                              data-bs-toggle="modal" 
+                              data-bs-target="#movieModal">
+                          <i class="fa-solid fa-play"></i> Xem phim
+                      </button>
                   </div>
                 </div>
             </div>
@@ -96,7 +106,6 @@
         .server-tab-custom { background-color: #3f3f46; }
         .close-btn-custom { opacity: 0.8; }
 
-        /* ================= BẮT BUỘC CÓ ĐỂ FIX LỖI MODAL MOBILE ================= */
         @media (max-width: 991.98px) {
             .modal-fullscreen .row { flex-direction: column !important; flex-wrap: nowrap !important; background-color: #000; }
             .video-container { height: auto !important; aspect-ratio: 16/9; width: 100%; flex: 0 0 auto !important; }
@@ -111,12 +120,9 @@
     <div class="modal fade" id="movieModal" tabindex="-1">
       <div class="modal-dialog modal-fullscreen">
         <div class="modal-content bg-dark border-0 rounded-0">
-          
           <div class="modal-body p-0 overflow-hidden">
             <div class="row g-0 h-100">
-              
               <div class="col-lg-9 col-xl-9 col-12 video-container bg-black position-relative d-flex flex-column justify-content-center h-100">
-            
                 <div class="player-wrapper w-100 h-100 d-flex align-items-center justify-content-center">
                   <iframe id="player" 
                           src="{{ $episodes[0]->link_embed ?? '' }}" 
@@ -142,9 +148,13 @@
                 </div>
 
                 <div class="px-3 px-lg-4 mb-3 mt-2">
-                  <div class="server-tab-custom d-inline-flex align-items-center px-3 py-2 rounded">
-                      <i class="fa-regular fa-circle-play text-white me-2 d-none d-lg-inline"></i> <span class="text-white fw-semibold me-2" style="font-size: 14px;">Vietsub #1</span>
-                      <span class="badge" style="background-color: #5a4b33; color: #f3b23e;">1 Link</span>
+                  {{-- FIX 3: Server Tab cũng dán class btn-save-history --}}
+                  <div class="server-tab-custom btn-save-history d-inline-flex align-items-center px-3 py-2 rounded" 
+                       style="cursor: pointer;" 
+                       data-movie-id="{{ $movie->id }}">
+                    <i class="fa-regular fa-circle-play text-white me-2 d-none d-lg-inline"></i> 
+                    <span class="text-white fw-semibold me-2" style="font-size: 14px;">Vietsub #1</span>
+                    <span class="badge" style="background-color: #5a4b33; color: #f3b23e;">1 Link</span>
                   </div>
                 </div>
 
@@ -162,18 +172,15 @@
                   <span class="text-danger" style="cursor: pointer; font-size: 15px;" data-bs-dismiss="modal">Đóng</span>
                 </div>
               </div>
-
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
     @include('partials.footer')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {{-- Đảm bảo thứ tự load: Bootstrap -> Script riêng --}}
     <script src="{{ asset('js/player.js') }}"></script>
     <script src="{{ asset('js/navbar.js')}}"></script>
-
-  </body>
-</html>
+    <script src="{{ asset('js/script.js')}}"></script>

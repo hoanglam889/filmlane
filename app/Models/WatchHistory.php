@@ -6,5 +6,23 @@ use Illuminate\Database\Eloquent\Model;
 
 class WatchHistory extends Model
 {
-    //
+    protected $fillable = [
+        'user_id',
+        'movie_id',
+        'watched_at',
+    ];
+
+    protected $casts = [
+        'watched_at' => 'datetime',
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function movie()
+    {
+        return $this->belongsTo(Movie::class);
+    }
 }
