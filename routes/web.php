@@ -22,6 +22,9 @@ use App\Http\Controllers\FacebookController;
 
 Route::get('/', [MovieController::class, 'index'])-> name('index');
 Route::get('/movie-detail/{slug}', [MovieController::class, 'detail']);
+Route::post('/movie-detail/{movie}/comment', [MovieController::class, 'storeComment'])->name('comment.store');
+Route::put('/comment/{id}', [MovieController::class, 'updateComment'])->name('comment.update')->middleware('auth');
+Route::delete('/comment/{id}', [MovieController::class, 'deleteComment'])->name('comment.destroy')->middleware('auth');
 
 Route::get('/watch-history', [MovieController::class, 'FilmHistory'])->middleware('auth')->name('history');
 Route::get('/favorites', [UserController::class, 'get_film_favories'])->middleware('auth')->name('favorites');
@@ -110,6 +113,13 @@ Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebook
 // API Routes for Like/Save functionality
 Route::get('/api/check-auth', [App\Http\Controllers\MovieController::class, 'checkAuth']);
 Route::post('/api/toggle-like', [App\Http\Controllers\MovieController::class, 'toggleLike'])->middleware('auth');
+
+// Profile routes
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [App\Http\Controllers\ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 //route của php beeze
 require __DIR__.'/auth.php';

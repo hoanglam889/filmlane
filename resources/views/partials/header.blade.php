@@ -89,7 +89,7 @@
                 <a href="{{ route('indexAdmin') }}"><i class="fa fa-dashboard"></i> Quản trị</a>
             @endif
             
-            <a href="#"><i class="fa fa-id-card"></i> Thông tin cá nhân</a>
+            <a href="{{ route('profile.edit') }}"><i class="fa fa-id-card"></i> Thông tin cá nhân</a>
             <a href="{{ route('favorites') }}"><i class="fa fa-heart"></i> Phim đã thích</a>
             <a href="{{ route('history') }}"><i class="fa fa-history"></i> Lịch sử xem phim</a>
             

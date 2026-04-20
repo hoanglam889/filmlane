@@ -125,13 +125,14 @@
               <div class="col-lg-9 col-xl-9 col-12 video-container bg-black position-relative d-flex flex-column justify-content-center h-100">
                 <div class="player-wrapper w-100 h-100 d-flex align-items-center justify-content-center">
                   <iframe id="player" 
-                          src="{{ $episodes[0]->video_link ?? '' }}" 
+                          src="" 
                           width="100%" 
                           height="100%" 
                           frameborder="0" 
                           allow="autoplay; fullscreen" 
                           allowfullscreen 
-                          style="background: black;">
+                          style="background: black;"
+                          data-first-src="{{ $episodes[0]->video_link ?? '' }}">
                   </iframe>
                 </div>
               </div>
@@ -178,6 +179,429 @@
         </div>
       </div>
     </div>
+    <!-- ============================================== -->
+    <!-- BẮT ĐẦU KHU VỰC BÌNH LUẬN VÀ GỢI Ý PHIM          -->
+    <!-- ============================================== -->
+    <section class="comments-section-wrapper" style="background-color: #171d21; padding: 60px 0; border-top: 1px solid #2a343b;">
+        <div class="container" style="max-width: 1200px;">
+            <div class="row">
+                
+                <!-- CỘT TRÁI: BÌNH LUẬN -->
+                <div class="col-lg-8 col-12 mb-5 mb-lg-0">
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #fff;">Bình luận</h3>
+
+                    @if(session('success'))
+                        <div class="alert alert-success" style="background: rgba(226, 215, 3, 0.2); color: #e2d703; border: 1px solid #e2d703;">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div class="alert alert-danger" style="background: rgba(220, 53, 69, 0.2); color: #ff6b6b; border: 1px solid #ff6b6b;">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <!-- Form bình luận chính -->
+                    @auth
+                    <form class="ajax-comment-form" action="{{ route('comment.store', $movie->id) }}" method="POST" data-is-reply="0" style="margin-bottom: 30px;">
+                        @csrf
+                        <textarea name="content" placeholder="Viết bình luận của bạn..." rows="3" style="width: 100%; background: #11141d; border: 1px solid #2a343b; color: white; padding: 15px; border-radius: 6px; resize: none; font-size: 14px;" required></textarea>
+                        <div style="text-align: right; margin-top: 10px;">
+                            <button type="submit" style="background: #e2d703; color: #111; border: none; padding: 8px 24px; border-radius: 4px; font-weight: 600; font-size: 14px; cursor: pointer;">Đăng bình luận</button>
+                        </div>
+                    </form>
+                    @else
+                    <div style="background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 15px; margin-bottom: 30px; text-align: center;">
+                        <p style="color: #cecaca; margin-bottom: 10px;">Vui lòng đăng nhập để bình luận.</p>
+                        <a href="{{ url('login') }}" style="background: #e2d703; color: #111; padding: 8px 20px; border-radius: 4px; font-weight: 600; text-decoration: none; display: inline-block;">Đăng nhập</a>
+                    </div>
+                    @endauth
+
+                    <!-- Danh sách bình luận -->
+                    <div class="comments-list" id="comments-container">
+                        @forelse($comments as $comment)
+                        <!-- Comment Item -->
+                        <div class="comment-item {{ $loop->index >= 5 ? 'd-none hidden-comment' : '' }}" id="comment-item-{{ $comment->id }}" style="background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 15px; margin-bottom: 12px;">
+                            <div style="display: flex; gap: 15px;">
+                                <div style="width: 38px; height: 38px; border-radius: 50%; background: #{{ substr(md5($comment->user->name), 0, 6) }}; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; color: #fff; flex-shrink: 0;">
+                                    {{ mb_strtoupper(mb_substr($comment->user->name, 0, 1)) }}
+                                </div>
+                                <div style="flex-grow: 1;">
+                                    <div style="margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <strong style="font-size: 14px; color: #fff; line-height: 1;">{{ $comment->user->name }}</strong> 
+                                            <span style="color: #cecaca; font-size: 12px; line-height: 1;">{{ $comment->created_at->diffForHumans() }}</span>
+                                        </div>
+                                        @if(Auth::check() && Auth::id() == $comment->user_id)
+                                        <div class="dropdown">
+                                            <button class="btn btn-link p-0 text-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="min-width: 100px; font-size: 13px;">
+                                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="editComment({{ $comment->id }})"><i class="fa-solid fa-pen"></i> Sửa</a></li>
+                                                <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deleteComment({{ $comment->id }})"><i class="fa-solid fa-trash"></i> Xóa</a></li>
+                                            </ul>
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <div id="comment-content-{{ $comment->id }}" style="color: #cecaca; font-size: 14px; margin-bottom: 12px; line-height: 1.5;">{{ $comment->content }}</div>
+                                    <button onclick="toggleReplyForm({{ $comment->id }})" style="background: transparent; border: 1px solid #444; color: #cecaca; padding: 3px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; transition: 0.2s;" onmouseover="this.style.color='#e2d703'; this.style.borderColor='#e2d703';" onmouseout="this.style.color='#cecaca'; this.style.borderColor='#444';">Trả lời</button>
+                                </div>
+                            </div>
+
+                            <!-- Hiển thị các replies -->
+                            <div class="replies-list" id="replies-list-{{ $comment->id }}" style="margin-left: 53px; margin-top: 15px; border-left: 2px solid #2a343b; padding-left: 15px; {{ $comment->replies->count() > 0 ? '' : 'display: none;' }}">
+                                @foreach($comment->replies as $reply)
+                                <div class="reply-item" id="comment-item-{{ $reply->id }}" style="margin-bottom: 15px;">
+                                    <div style="display: flex; gap: 12px;">
+                                        <div style="width: 30px; height: 30px; border-radius: 50%; background: #{{ substr(md5($reply->user->name), 0, 6) }}; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; color: #fff; flex-shrink: 0;">
+                                            {{ mb_strtoupper(mb_substr($reply->user->name, 0, 1)) }}
+                                        </div>
+                                        <div style="flex-grow: 1;">
+                                            <div style="margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between;">
+                                                <div style="display: flex; align-items: center; gap: 8px;">
+                                                    <strong style="font-size: 13px; color: #fff; line-height: 1;">{{ $reply->user->name }}</strong> 
+                                                    <span style="color: #cecaca; font-size: 11px; line-height: 1;">{{ $reply->created_at->diffForHumans() }}</span>
+                                                </div>
+                                                @if(Auth::check() && Auth::id() == $reply->user_id)
+                                                <div class="dropdown">
+                                                    <button class="btn btn-link p-0 text-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
+                                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="min-width: 100px; font-size: 13px;">
+                                                        <li><a class="dropdown-item" href="javascript:void(0)" onclick="editComment({{ $reply->id }})"><i class="fa-solid fa-pen"></i> Sửa</a></li>
+                                                        <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deleteComment({{ $reply->id }})"><i class="fa-solid fa-trash"></i> Xóa</a></li>
+                                                    </ul>
+                                                </div>
+                                                @endif
+                                            </div>
+                                            <div id="comment-content-{{ $reply->id }}" style="color: #cecaca; font-size: 13px; margin-bottom: 0; line-height: 1.4;">{{ $reply->content }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Form Reply ẩn -->
+                            <div class="reply-form" id="reply-form-{{ $comment->id }}" style="display: none; margin-left: 53px; margin-top: 15px;">
+                                @auth
+                                <form class="ajax-comment-form" action="{{ route('comment.store', $movie->id) }}" method="POST" data-is-reply="1" data-parent-id="{{ $comment->id }}">
+                                    @csrf
+                                    <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                                    <textarea name="content" placeholder="Viết trả lời..." rows="2" style="width: 100%; background: #171d21; border: 1px solid #2a343b; color: white; padding: 10px; border-radius: 6px; resize: none; font-size: 13px;" required></textarea>
+                                    <div style="text-align: right; margin-top: 8px;">
+                                        <button type="submit" style="background: #e2d703; color: #111; border: none; padding: 6px 16px; border-radius: 4px; font-weight: 600; font-size: 12px; cursor: pointer;">Gửi</button>
+                                    </div>
+                                </form>
+                                @else
+                                <div style="background: #171d21; border: 1px solid #2a343b; border-radius: 6px; padding: 10px; text-align: center;">
+                                    <span style="color: #cecaca; font-size: 13px;">Bạn cần <a href="{{ url('login') }}" style="color: #e2d703;">đăng nhập</a> để trả lời.</span>
+                                </div>
+                                @endauth
+                            </div>
+                        </div>
+                        @empty
+                        <div id="empty-comment-msg" style="text-align: center; color: #cecaca; padding: 20px 0;">
+                            Chưa có bình luận nào. Hãy là người đầu tiên bình luận!
+                        </div>
+                        @endforelse
+                        
+                        @if($comments->count() > 5)
+                        <div class="text-center mt-3" id="load-more-container">
+                            <button id="btn-load-more-comments" style="background: transparent; border: 1px solid #e2d703; color: #e2d703; padding: 8px 24px; border-radius: 4px; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='#e2d703'; this.style.color='#111';" onmouseout="this.style.background='transparent'; this.style.color='#e2d703';" onclick="showMoreComments()">Xem thêm bình luận</button>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- CỘT PHẢI: GỢI Ý PHIM -->
+                <div class="col-lg-4 col-12">
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #fff;">Có thể bạn sẽ thích</h3>
+                    <div class="suggested-movies-list">
+                        
+                        <!-- Phim gợi ý 1 -->
+                        <div style="display: flex; gap: 15px; background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='#e2d703'" onmouseout="this.style.borderColor='#2a343b'">
+                            <img src="https://via.placeholder.com/80x110/242c38/cecaca?text=Phim+1" style="width: 70px; height: 100px; object-fit: cover; border-radius: 4px;" alt="movie">
+                            <div style="display: flex; flex-direction: column; justify-content: center;">
+                                <h4 style="color: #fff; font-size: 15px; margin-bottom: 5px; font-weight: 600;">The Dark Knight</h4>
+                                <div style="color: #e2d703; font-size: 12px; margin-bottom: 5px;"><i class="fa-solid fa-star"></i> 9.0</div>
+                                <div><span style="border: 1px solid #444; color: #cecaca; font-size: 11px; padding: 2px 6px; border-radius: 3px;">Hành Động</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Phim gợi ý 2 -->
+                        <div style="display: flex; gap: 15px; background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='#e2d703'" onmouseout="this.style.borderColor='#2a343b'">
+                            <img src="https://via.placeholder.com/80x110/242c38/cecaca?text=Phim+2" style="width: 70px; height: 100px; object-fit: cover; border-radius: 4px;" alt="movie">
+                            <div style="display: flex; flex-direction: column; justify-content: center;">
+                                <h4 style="color: #fff; font-size: 15px; margin-bottom: 5px; font-weight: 600;">Inception</h4>
+                                <div style="color: #e2d703; font-size: 12px; margin-bottom: 5px;"><i class="fa-solid fa-star"></i> 8.8</div>
+                                <div><span style="border: 1px solid #444; color: #cecaca; font-size: 11px; padding: 2px 6px; border-radius: 3px;">Viễn Tưởng</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Phim gợi ý 3 -->
+                        <div style="display: flex; gap: 15px; background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='#e2d703'" onmouseout="this.style.borderColor='#2a343b'">
+                            <img src="https://via.placeholder.com/80x110/242c38/cecaca?text=Phim+3" style="width: 70px; height: 100px; object-fit: cover; border-radius: 4px;" alt="movie">
+                            <div style="display: flex; flex-direction: column; justify-content: center;">
+                                <h4 style="color: #fff; font-size: 15px; margin-bottom: 5px; font-weight: 600;">Interstellar</h4>
+                                <div style="color: #e2d703; font-size: 12px; margin-bottom: 5px;"><i class="fa-solid fa-star"></i> 8.6</div>
+                                <div><span style="border: 1px solid #444; color: #cecaca; font-size: 11px; padding: 2px 6px; border-radius: 3px;">Khám Phá</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Phim gợi ý 4 -->
+                        <div style="display: flex; gap: 15px; background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='#e2d703'" onmouseout="this.style.borderColor='#2a343b'">
+                            <img src="https://via.placeholder.com/80x110/242c38/cecaca?text=Phim+4" style="width: 70px; height: 100px; object-fit: cover; border-radius: 4px;" alt="movie">
+                            <div style="display: flex; flex-direction: column; justify-content: center;">
+                                <h4 style="color: #fff; font-size: 15px; margin-bottom: 5px; font-weight: 600;">Avengers</h4>
+                                <div style="color: #e2d703; font-size: 12px; margin-bottom: 5px;"><i class="fa-solid fa-star"></i> 8.0</div>
+                                <div><span style="border: 1px solid #444; color: #cecaca; font-size: 11px; padding: 2px 6px; border-radius: 3px;">Hành Động</span></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function toggleReplyForm(commentId) {
+            let form = document.getElementById('reply-form-' + commentId);
+            if (form) {
+                form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        function showMoreComments() {
+            document.querySelectorAll('.hidden-comment').forEach(function(el) {
+                el.classList.remove('d-none');
+            });
+            let loadMoreContainer = document.getElementById('load-more-container');
+            if (loadMoreContainer) {
+                loadMoreContainer.style.display = 'none';
+            }
+        }
+
+        function handleAjaxSubmit(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            let form = e.target;
+            let submitBtn = form.querySelector('button[type="submit"]');
+            let originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = 'Đang gửi...';
+            submitBtn.disabled = true;
+
+            let formData = new FormData(form);
+            let actionUrl = form.getAttribute('action');
+            let isReply = form.getAttribute('data-is-reply') === '1';
+            let parentId = form.getAttribute('data-parent-id');
+
+            fetch(actionUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+
+                if(data.success) {
+                    form.reset();
+                    if(isReply) {
+                        toggleReplyForm(parentId);
+                    } else {
+                        let emptyMsg = document.getElementById('empty-comment-msg');
+                        if(emptyMsg) emptyMsg.remove();
+                    }
+
+                    if(!isReply) {
+                        let newHtml = `
+                        <div class="comment-item" id="comment-item-${data.comment.id}" style="background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 15px; margin-bottom: 12px;">
+                            <div style="display: flex; gap: 15px;">
+                                <div style="width: 38px; height: 38px; border-radius: 50%; background: #${data.comment.color_hash}; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; color: #fff; flex-shrink: 0;">
+                                    ${data.comment.user_initial}
+                                </div>
+                                <div style="flex-grow: 1;">
+                                    <div style="margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <strong style="font-size: 14px; color: #fff; line-height: 1;">${data.comment.user_name}</strong> 
+                                            <span style="color: #cecaca; font-size: 12px; line-height: 1;">${data.comment.time}</span>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-link p-0 text-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="min-width: 100px; font-size: 13px;">
+                                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="editComment(${data.comment.id})"><i class="fa-solid fa-pen"></i> Sửa</a></li>
+                                                <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deleteComment(${data.comment.id})"><i class="fa-solid fa-trash"></i> Xóa</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div id="comment-content-${data.comment.id}" style="color: #cecaca; font-size: 14px; margin-bottom: 12px; line-height: 1.5;">${data.comment.content}</div>
+                                    <button onclick="toggleReplyForm(${data.comment.id})" style="background: transparent; border: 1px solid #444; color: #cecaca; padding: 3px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; transition: 0.2s;">Trả lời</button>
+                                </div>
+                            </div>
+                            
+                            <div class="replies-list" id="replies-list-${data.comment.id}" style="margin-left: 53px; margin-top: 15px; border-left: 2px solid #2a343b; padding-left: 15px; display: none;">
+                            </div>
+
+                            <div class="reply-form" id="reply-form-${data.comment.id}" style="display: none; margin-left: 53px; margin-top: 15px;">
+                                <form class="ajax-comment-form" action="${actionUrl}" method="POST" data-is-reply="1" data-parent-id="${data.comment.id}">
+                                    <input type="hidden" name="_token" value="${form.querySelector('input[name="_token"]').value}">
+                                    <input type="hidden" name="parent_id" value="${data.comment.id}">
+                                    <textarea name="content" placeholder="Viết trả lời..." rows="2" style="width: 100%; background: #171d21; border: 1px solid #2a343b; color: white; padding: 10px; border-radius: 6px; resize: none; font-size: 13px;" required></textarea>
+                                    <div style="text-align: right; margin-top: 8px;">
+                                        <button type="submit" style="background: #e2d703; color: #111; border: none; padding: 6px 16px; border-radius: 4px; font-weight: 600; font-size: 12px; cursor: pointer;">Gửi</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>`;
+                        
+                        document.getElementById('comments-container').insertAdjacentHTML('afterbegin', newHtml);
+                        let newForm = document.getElementById(`reply-form-${data.comment.id}`).querySelector('form');
+                        newForm.addEventListener('submit', handleAjaxSubmit);
+                    } else {
+                        let newHtml = `
+                        <div class="reply-item" id="comment-item-${data.comment.id}" style="margin-bottom: 15px;">
+                            <div style="display: flex; gap: 12px;">
+                                <div style="width: 30px; height: 30px; border-radius: 50%; background: #${data.comment.color_hash}; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; color: #fff; flex-shrink: 0;">
+                                    ${data.comment.user_initial}
+                                </div>
+                                <div style="flex-grow: 1;">
+                                    <div style="margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="display: flex; align-items: center; gap: 8px;">
+                                            <strong style="font-size: 13px; color: #fff; line-height: 1;">${data.comment.user_name}</strong> 
+                                            <span style="color: #cecaca; font-size: 11px; line-height: 1;">${data.comment.time}</span>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn btn-link p-0 text-secondary" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;">
+                                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" style="min-width: 100px; font-size: 13px;">
+                                                <li><a class="dropdown-item" href="javascript:void(0)" onclick="editComment(${data.comment.id})"><i class="fa-solid fa-pen"></i> Sửa</a></li>
+                                                <li><a class="dropdown-item text-danger" href="javascript:void(0)" onclick="deleteComment(${data.comment.id})"><i class="fa-solid fa-trash"></i> Xóa</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div id="comment-content-${data.comment.id}" style="color: #cecaca; font-size: 13px; margin-bottom: 0; line-height: 1.4;">${data.comment.content}</div>
+                                </div>
+                            </div>
+                        </div>`;
+                        
+                        let repliesList = document.getElementById('replies-list-' + parentId);
+                        repliesList.style.display = 'block';
+                        repliesList.insertAdjacentHTML('beforeend', newHtml);
+                    }
+                } else {
+                    alert(data.message || 'Có lỗi xảy ra');
+                }
+            })
+            .catch(error => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                alert('Lỗi kết nối. Vui lòng thử lại!');
+                console.error(error);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('submit', function (e) {
+                if (e.target.classList.contains('ajax-comment-form')) {
+                    handleAjaxSubmit(e);
+                }
+            });
+        });
+
+        // Edit Comment
+        function editComment(id) {
+            let contentDiv = document.getElementById('comment-content-' + id);
+            if (!contentDiv) return;
+            
+            // Xóa khoảng trắng thừa và html để lấy text
+            let currentContent = contentDiv.innerText.trim();
+            
+            let html = `
+                <textarea id="edit-input-${id}" class="form-control bg-dark text-white mb-2 mt-2" rows="2" style="border: 1px solid #444; font-size: 13px;">${currentContent}</textarea>
+                <div class="text-end">
+                    <button class="btn btn-sm" style="background: #444; color: #fff; margin-right: 5px;" onclick="cancelEdit(${id}, \`${currentContent.replace(/`/g, '\\`')}\`)">Hủy</button>
+                    <button class="btn btn-sm" style="background: #e2d703; color: #111; font-weight: 600;" onclick="saveComment(${id})">Lưu</button>
+                </div>
+            `;
+            contentDiv.innerHTML = html;
+        }
+
+        function cancelEdit(id, originalContent) {
+            let contentDiv = document.getElementById('comment-content-' + id);
+            if (contentDiv) contentDiv.innerText = originalContent;
+        }
+
+        function saveComment(id) {
+            let input = document.getElementById('edit-input-' + id);
+            let content = input.value;
+            if (!content.trim()) {
+                alert('Nội dung không được để trống!'); return;
+            }
+            
+            fetch('/comment/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ content: content })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('comment-content-' + id).innerText = data.content;
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => {
+                alert('Lỗi kết nối!');
+                console.error(err);
+            });
+        }
+
+        function deleteComment(id) {
+            if (!confirm('Bạn có chắc chắn muốn xóa bình luận này?')) return;
+            
+            fetch('/comment/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    let item = document.getElementById('comment-item-' + id);
+                    if (item) {
+                        item.style.transition = '0.3s';
+                        item.style.opacity = '0';
+                        setTimeout(() => item.remove(), 300);
+                    }
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => {
+                alert('Lỗi kết nối!');
+                console.error(err);
+            });
+        }
+    </script>
+    <!-- ============================================== -->
+    <!-- KẾT THÚC KHU VỰC BÌNH LUẬN                      -->
+    <!-- ============================================== -->
 
     @include('partials.footer')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

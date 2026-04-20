@@ -9,6 +9,7 @@ use App\Models\Episode;
 use App\Models\Country;
 use App\Models\Favorite;
 use App\Models\WatchHistory;
+use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 class MovieController extends Controller
 {
@@ -27,7 +28,92 @@ class MovieController extends Controller
         $episodes = Episode::where('movie_id', $movie->id)
                         ->orderBy('episode_number')
                         ->get();
-        return view('movie-detail', compact('movie', 'episodes'));
+                        
+        $comments = Comment::with(['user', 'replies.user' => function($query) {
+            $query->orderBy('created_at', 'asc');
+        }])
+        ->where('movie_id', $movie->id)
+        ->whereNull('parent_id')
+        ->latest()
+        ->get();
+
+        return view('movie-detail', compact('movie', 'episodes', 'comments'));
+    }
+
+    public function storeComment(Request $request, $movieId)
+    {
+        $request->validate([
+            'content' => 'required|string|max:1000',
+            'parent_id' => 'nullable|exists:comments,id'
+        ]);
+
+        if (!Auth::check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Bạn cần đăng nhập để bình luận.'
+            ], 401);
+        }
+
+        $comment = Comment::create([
+            'user_id' => Auth::id(),
+            'movie_id' => $movieId,
+            'content' => $request->content,
+            'parent_id' => $request->parent_id
+        ]);
+
+        $comment->load('user');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Đã gửi bình luận thành công.',
+            'comment' => [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'parent_id' => $comment->parent_id,
+                'user_id' => $comment->user_id,
+                'user_name' => $comment->user->name,
+                'user_initial' => mb_strtoupper(mb_substr($comment->user->name, 0, 1)),
+                'color_hash' => substr(md5($comment->user->name), 0, 6),
+                'time' => $comment->created_at->diffForHumans()
+            ]
+        ]);
+    }
+
+    public function updateComment(Request $request, $id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        if (Auth::id() !== $comment->user_id) {
+            return response()->json(['success' => false, 'message' => 'Bạn không có quyền sửa bình luận này.'], 403);
+        }
+
+        $request->validate([
+            'content' => 'required|string|max:1000'
+        ]);
+
+        $comment->update(['content' => $request->content]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Đã cập nhật bình luận.',
+            'content' => $comment->content
+        ]);
+    }
+
+    public function deleteComment($id)
+    {
+        $comment = Comment::findOrFail($id);
+
+        if (Auth::id() !== $comment->user_id) {
+            return response()->json(['success' => false, 'message' => 'Bạn không có quyền xóa bình luận này.'], 403);
+        }
+
+        $comment->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Đã xóa bình luận.'
+        ]);
     }
     public function create()
     {

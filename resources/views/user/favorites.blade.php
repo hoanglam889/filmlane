@@ -64,5 +64,53 @@
 
 <button class="back-to-top"><i class="fa-solid fa-chevron-up"></i></button>
 
+<script>
+document.querySelectorAll('.btn-remove').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const movieId = this.dataset.movieId;
+        const card    = this.closest('.card-horizontal');
+        const token   = '{{ csrf_token() }}';
+
+        fetch(`/api/toggle-like`, {
+            method: 'POST',
+            headers: { 
+                'X-CSRF-TOKEN': token, 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json' 
+            },
+            body: JSON.stringify({
+                movie_id: movieId,
+                action: 'unlike'
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                card.style.transition = 'opacity 0.3s, transform 0.3s';
+                card.style.opacity    = '0';
+                card.style.transform  = 'translateX(20px)';
+                setTimeout(() => {
+                    card.remove();
+                    const remaining = document.querySelectorAll('.card-horizontal').length;
+                    const badge = document.querySelector('.count-badge');
+                    if (badge) badge.textContent = remaining > 0 ? `${remaining} phim` : '';
+                    if (remaining === 0) {
+                        document.querySelector('.list-layout').innerHTML = `
+                            <div class="empty-state">
+                                <i class="fa-regular fa-heart"></i>
+                                <h5>Danh sách trống.</h5>
+                                <a href="{{ url('/') }}">Khám phá phim ngay &rarr;</a>
+                            </div>`;
+                    }
+                }, 300);
+            } else {
+                alert(data.message || 'Có lỗi xảy ra');
+            }
+        })
+        .catch(err => console.error('Lỗi xóa phim đã thích:', err));
+    });
+});
+</script>
+
 <script src="{{ asset('js/script.js')}}"></script>
 <script src="{{ asset('js/navbar.js')}}"></script>

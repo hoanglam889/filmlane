@@ -4,8 +4,7 @@ function changeVideo(url, epId, btn) {
     // 1. Đổi nguồn iframe
     player.src = url;
 
-    // 2. CẬP NHẬT ID TẬP PHIM VÀO BIẾN TOÀN CỤC
-    // Để khi bấm "Xem phim" nó biết sếp đang ở tập nào
+    // 2. Cập nhật ID tập phim vào biến toàn cục
     window.currentEpisodeId = epId;
 
     // 3. Cập nhật UI nút bấm
@@ -22,19 +21,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const firstBtn = document.querySelector('.episode-btn');
 
     if (movieModal && player) {
+        // Khi modal MỞ: nạp tập đầu tiên nếu chưa có src
         movieModal.addEventListener('shown.bs.modal', function () {
-            if ((!player.getAttribute('src') || player.getAttribute('src') === '') && firstBtn) {
-                // Lấy ID tập 1 từ thuộc tính data-episode-id của cái nút đầu tiên
-                const firstEpId = firstBtn.getAttribute('data-episode-id');
-                const firstUrl = firstBtn.getAttribute('onclick').match(/'([^']+)'/)[1];
-                
-                // Gọi hàm changeVideo xịn có kèm ID
-                changeVideo(firstUrl, firstEpId, firstBtn);
+            if (!player.src || player.src === window.location.href || player.src === 'about:blank') {
+                const firstSrc = player.getAttribute('data-first-src');
+                const firstEpId = firstBtn ? firstBtn.getAttribute('data-episode-id') : null;
+
+                if (firstSrc) {
+                    changeVideo(firstSrc, firstEpId, firstBtn);
+                }
             }
         });
 
-        movieModal.addEventListener('hidden.bs.modal', function () {
-            player.src = ''; 
+        // Khi modal ĐÓNG: xóa src hoàn toàn để dừng video, không chạy ngầm
+        movieModal.addEventListener('hide.bs.modal', function () {
+            player.src = 'about:blank';
+            setTimeout(() => { player.src = ''; }, 100);
         });
     }
 });
