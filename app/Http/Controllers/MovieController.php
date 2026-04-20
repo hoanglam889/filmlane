@@ -21,7 +21,7 @@ class MovieController extends Controller
 
     public function detail($slug)
     {
-        $movie = Movie::where('slug', $slug)->first();
+        $movie = Movie::where('slug', $slug)->firstOrFail();
 
         //get episode
         $episodes = Episode::where('movie_id', $movie->id)
@@ -109,10 +109,6 @@ class MovieController extends Controller
 
     public function FilmHistory()
     {
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('error', 'Vui lòng đăng nhập để xem lịch sử.');
-        }
-
         $user = Auth::user();
         $movies = $user->watchedHistory()->orderBy('watch_histories.updated_at', 'desc')->get();
 

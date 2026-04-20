@@ -11,6 +11,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
     <link rel="stylesheet" href="{{ asset('css/movie.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/user.css') }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -89,8 +90,8 @@
             @endif
             
             <a href="#"><i class="fa fa-id-card"></i> Thông tin cá nhân</a>
-            <a href="#"><i class="fa fa-heart"></i> Phim đã thích</a>
-            <a href="#"><i class="fa fa-history"></i> Lịch sử xem phim</a>
+            <a href="{{ route('favorites') }}"><i class="fa fa-heart"></i> Phim đã thích</a>
+            <a href="{{ route('history') }}"><i class="fa fa-history"></i> Lịch sử xem phim</a>
             
             <hr style="border-color: #333; margin: 5px 0;">
             

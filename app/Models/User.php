@@ -37,8 +37,8 @@ class User extends Authenticatable
     }
     public function watchedHistory()
     {
-        // Cấu trúc: belongsToMany(Model, 'tên_bảng', 'khoá_ngoại_1', 'khoá_ngoại_2')
         return $this->belongsToMany(Movie::class, 'watch_histories', 'user_id', 'movie_id')
-                    ->withTimestamps(); // Bắt buộc có dòng này để nó tự lưu created_at, updated_at
+                ->withPivot('episode_id') 
+                ->withTimestamps();
     }
 }

@@ -125,7 +125,7 @@
               <div class="col-lg-9 col-xl-9 col-12 video-container bg-black position-relative d-flex flex-column justify-content-center h-100">
                 <div class="player-wrapper w-100 h-100 d-flex align-items-center justify-content-center">
                   <iframe id="player" 
-                          src="{{ $episodes[0]->link_embed ?? '' }}" 
+                          src="{{ $episodes[0]->video_link ?? '' }}" 
                           width="100%" 
                           height="100%" 
                           frameborder="0" 
@@ -161,11 +161,12 @@
                 <div class="episode-grid px-3 px-lg-4 pb-4 flex-grow-1 overflow-auto" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; align-content: start;">
                   @foreach($episodes as $index => $ep)
                     <button 
-                      class="episode-btn {{ $index == 0 ? 'active' : '' }}"
-                      onclick="changeVideo('{{ $ep->video_link }}', this)">
-                      {{ $ep->episode_number == 'Full' ? 'Full' : $ep->episode_number }} 
+                        class="episode-btn {{ $index == 0 ? 'active' : '' }}"
+                        data-episode-id="{{ $ep->id }}"
+                        onclick="changeVideo('{{ $ep->video_link }}', '{{ $ep->id }}', this)">
+                        {{ $ep->episode_number }} 
                     </button>
-                  @endforeach
+                @endforeach
                 </div>
 
                 <div class="d-lg-none text-end px-4 pb-3 mt-auto">

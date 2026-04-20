@@ -20,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Set múi giờ Việt Nam (UTC+7) cho toàn bộ app
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        \Carbon\Carbon::setLocale('vi');
+
         View::composer('*', function ($view) {
             
             // Gọi DB lấy danh sách Thể loại và Quốc gia

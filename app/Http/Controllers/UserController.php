@@ -22,26 +22,21 @@ class UserController extends Controller
     public function saveHistory(Request $request)
     {
         if (Auth::check()) {
-            
-            /** @var \App\Models\User $user */
             $user = Auth::user();
-            
-            $movie_id = $request->movie_id;
-            
+            $movieId = $request->movie_id;
+            $episodeId = $request->episode_id;
+
+            /** @var \App\Models\User $user */
             $user->watchedHistory()->syncWithoutDetaching([
-                $movie_id => ['updated_at' => now()]
+                $movieId => [
+                    'episode_id' => $episodeId,
+                    'updated_at' => now()
+                ]
             ]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Lưu lịch sử xem mượt mà!'
-            ]);
+            return response()->json(['status' => 'success', 'message' => 'Đã lưu tập phim!']);
         }
-
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Chưa đăng nhập, không lưu lịch sử'
-        ], 401);
+        return response()->json(['status' => 'error'], 401);
     }
 
     public function removeHistory($movie_id)

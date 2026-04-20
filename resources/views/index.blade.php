@@ -48,7 +48,7 @@
                 <a href="{{ url('/movie-detail/' . $is_upcoming->slug) }}"><img src="{{ asset($is_upcoming -> image) }}" alt="" /></a>
               </div>
               <div class="title">
-                <a href="{{ url('/movie-detail/'). $is_upcoming->slug}}"><h4>{{  $is_upcoming -> title }}</h4></a>
+                <a href="{{ url('/movie-detail/' . $is_upcoming->slug) }}"><h4>{{  $is_upcoming -> title }}</h4></a>
                 <span>{{  $is_upcoming -> year }}</span>
               </div>
               <div class="footer">
