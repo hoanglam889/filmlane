@@ -8,7 +8,12 @@
         <div class="col-md-12">
             <div class="card bg-dark text-white shadow-sm" style="border: 1px solid #333; border-radius: 10px;">
                 <div class="card-header d-flex justify-content-between align-items-center" style="border-bottom: 1px solid #333; padding: 15px 20px;">
-                    <h4 class="card-title mb-0" style="font-weight: 600;">Danh sách tập phim</h4>
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="{{ route('admin.movie.index') }}" class="btn btn-sm btn-outline-secondary" style="color: #ccc; border-color: #444;">
+                            <i class="fa-solid fa-arrow-left"></i> Quay lại
+                        </a>
+                        <h4 class="card-title mb-0" style="font-weight: 600;">Danh sách tập phim</h4>
+                    </div>
                     <a href="{{ route('admin.episode.create', ['movie_id' => $movie_id]) }}" class="btn-add" style="font-weight: 600; color: #000;">
                         <i class="fa-solid fa-plus"></i> Thêm tập mới
                     </a>
@@ -53,11 +58,11 @@
                                     
                                     <td class="text-center">
                                         <div style="display: flex; justify-content: center; gap: 15px; align-items: center;">
-                                            <a href="" title="Sửa" style="color: #3498db; font-size: 1.2rem; transition: 0.2s;">
+                                            <a href="{{ route('admin.episode.edit', $episode->id) }}" title="Sửa" style="color: #3498db; font-size: 1.2rem; transition: 0.2s;">
                                                 <i class="fa-solid fa-pen-to-square"></i>
                                             </a>
 
-                                            <form action="" method="POST" 
+                                            <form action="{{ route('admin.episode.destroy', $episode->id) }}" method="POST" 
                                                   onsubmit="return confirm('Ông có chắc chắn muốn xóa tập phim này không?');" style="margin: 0;">
                                                 @csrf
                                                 @method('DELETE')

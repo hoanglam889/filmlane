@@ -30,9 +30,15 @@
                     <td class="movie-cell">
                         <div class="movie-info-cell">
                             <img src="{{ asset($movie->image) }}" alt="Poster" class="poster-img" style="margin: 0; width: 45px; height: 65px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">
-                            <span class="movie-title-text" title="{{ $movie->title }}">
-                                {{ $movie->title }}
-                            </span>
+                            <div style="display: flex; flex-direction: column;">
+                                <span class="movie-title-text" title="{{ $movie->title }}" style="font-weight: 700;">
+                                    {{ $movie->title }}
+                                </span>
+                                <small style="color: #e2d703; font-size: 11px;">
+                                    <i class="fa-solid fa-eye"></i> {{ number_format($movie->views) }} | 
+                                    <i class="fa-solid fa-star"></i> {{ number_format($movie->ratings()->avg('rating') ?: 0, 1) }}
+                                </small>
+                            </div>
                         </div>
                     </td>
                     <td class="hide-on-mobile" style="white-space: nowrap;">
@@ -43,16 +49,26 @@
                         </small>
                     </td>
                     
-                    <td style="white-space: nowrap;">
+                    <td style="white-space: nowrap; text-align: center;">
+                        <div style="font-weight: 700; color: #fff;">{{ $movie->episodes->count() }} tập</div>
                         @if($movie->status == 'active')
-                            <span class="status active">Đang hiện</span>
+                            <span class="status active" style="font-size: 10px; padding: 2px 6px;">Công khai</span>
                         @else
-                            <span class="status draft">Bản nháp</span>
+                            <span class="status draft" style="font-size: 10px; padding: 2px 6px;">Nháp</span>
                         @endif
                     </td>
                     
                     <td class="actions" style="white-space: nowrap;">
-                        <a href="{{ route('admin.movie.edit', $movie->id) }}" class="btn-edit" title="Chỉnh sửa">
+                        <!-- Phím tắt quản lý tập phim -->
+                        <a href="{{ route('admin.episode.get_episodes', $movie->id) }}" class="btn-edit" title="Danh sách tập phim" style="background: #2a343b; color: #e2d703;">
+                            <i class="fa-solid fa-list-ol"></i>
+                        </a>
+                        <a href="{{ route('admin.episode.create', $movie->id) }}" class="btn-edit" title="Thêm tập mới" style="background: #2a343b; color: #00d4ff;">
+                            <i class="fa-solid fa-plus-circle"></i>
+                        </a>
+                        
+                        <!-- Nút sửa/xóa gốc -->
+                        <a href="{{ route('admin.movie.edit', $movie->id) }}" class="btn-edit" title="Chỉnh sửa phim">
                             <i class="fa-solid fa-pen"></i>
                         </a>
                         <form action="{{ route('admin.movie.destroy', $movie->id) }}" method="POST" onsubmit="return confirm('Ông có chắc chắn muốn xóa bộ phim này không?');" style="display: inline-block;">

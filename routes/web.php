@@ -68,13 +68,16 @@ Route::get('/admin/episode', [EpisodeController::class, 'index'])->name('admin.e
 Route::get('/admin/episode/{movie_id}', [App\Http\Controllers\admin\EpisodeController::class, 'getEpisodes'])->name('admin.episode.get_episodes');
 
 //MỞ TRANG SỬA TẬP
-//Route::get('/admin/episode/{id}/edit', [App\Http\Controllers\admin\EpisodeController::class, 'edit'])->name('admin.episode.edit');
+Route::get('/admin/episode/{id}/edit', [EpisodeController::class, 'edit'])->name('admin.episode.edit');
+//Gửi trang sửa tập
+Route::put('/admin/episode/update/{id}', [EpisodeController::class, 'update'])->name('admin.episode.update');
+//Xóa tập phim
+Route::delete('/admin/episode/destroy/{id}', [EpisodeController::class, 'destroy'])->name('admin.episode.destroy');
 
 //Mở trang thêm tập
 Route::get('/admin/episode/create/{movie_id}', [EpisodeController::class, 'create'])->name('admin.episode.create');
 //Gửi trang thêm tập
 Route::post('/episode/store', [EpisodeController::class, 'store'])->name('admin.episode.store');
-
 
 
 //Bộ route dùng quản lý danh mục

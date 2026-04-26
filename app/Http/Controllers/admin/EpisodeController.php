@@ -36,20 +36,56 @@ class EpisodeController extends Controller
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'movie_id' => 'required|exists:movies,id',
-        'episode_number' => 'required|numeric',
-        'video_link' => 'required',
-    ]);
+    {
+        $request->validate([
+            'movie_id' => 'required|exists:movies,id',
+            'episode_number' => 'required|numeric',
+            'video_link' => 'required',
+        ]);
 
-    Episode::create([
-        'movie_id' => $request->movie_id,
-        'episode_number' => $request->episode_number,
-        'video_link' => $request->video_link,
-        'status' => $request->status ?? 'active', // Mặc định active
-    ]);
+        Episode::create([
+            'movie_id' => $request->movie_id,
+            'episode_number' => $request->episode_number,
+            'video_link' => $request->video_link,
+            'status' => $request->status ?? 'active',
+        ]);
 
-    return redirect()->route('admin.episode.get_episodes', $request->movie_id)->with('success', 'Thêm tập mới thành công!');
-}
+        return redirect()->route('admin.episode.get_episodes', $request->movie_id)->with('success', 'Thêm tập mới thành công!');
+    }
+
+    public function edit($id)
+    {
+        $current_episode = Episode::findOrFail($id);
+        $movie = Movie::findOrFail($current_episode->movie_id);
+        // Lấy tất cả các tập của phim này để hiển thị danh sách
+        $episodes = Episode::where('movie_id', $movie->id)->orderBy('episode_number', 'ASC')->get();
+        
+        return view('admin.episodes_edit', compact('current_episode', 'movie', 'episodes'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'episode_number' => 'required|numeric',
+            'video_link' => 'required',
+        ]);
+
+        $episode = Episode::findOrFail($id);
+        $episode->update([
+            'episode_number' => $request->episode_number,
+            'video_link' => $request->video_link,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('admin.episode.get_episodes', $episode->movie_id)->with('success', 'Cập nhật tập phim thành công!');
+    }
+
+    public function destroy($id)
+    {
+        $episode = Episode::findOrFail($id);
+        $movie_id = $episode->movie_id;
+        $episode->delete();
+
+        return redirect()->route('admin.episode.get_episodes', $movie_id)->with('success', 'Xóa tập phim thành công!');
+    }
 }
