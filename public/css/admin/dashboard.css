@@ -69,6 +69,7 @@ body { background-color: #11141d; color: #cecaca; }
     display: flex; 
     flex-direction: column; 
     height: 100vh; /* Cùng chiều cao với khung ngoài */
+    min-width: 0; /* Rất quan trọng để nội dung không bị đẩy tràn ngang */
 }
 
 /* TOPBAR (DÍNH TRÊN ĐẦU) */
@@ -190,9 +191,151 @@ table tbody tr:hover { background-color: rgba(255,255,255,0.02); }
     .sidebar.active { left: 0; } 
     .close-sidebar { display: block; }
     .hamburger-menu { display: block; } 
-    .topbar .search { display: none; }
-    .search-box-movie { display: none; }
+    .topbar .search { display: flex; width: 160px; }
+    .topbar header div:first-child { gap: 10px !important; }
+    .topbar { padding: 15px 15px; }
+    .topbar .user-profile span { font-size: 13px; }
 }
 
 
 
+
+/* Responsive Table Cells */
+.movie-info-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.movie-title-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+@media (max-width: 991px) {
+    .movie-info-cell {
+        flex-direction: row; /* Giữ hình và chữ nằm ngang */
+        align-items: center;
+        gap: 10px;
+    }
+    .movie-title-text {
+        white-space: normal;
+        max-width: 180px;
+        font-size: 13px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .hide-on-mobile {
+        display: none !important;
+    }
+    
+    .content-wrapper {
+        padding: 15px;
+    }
+    .page-title {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    .stats-grid {
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    .stat-card {
+        padding: 15px;
+    }
+    .stat-card .info h3 {
+        font-size: 24px;
+    }
+    .stat-card i {
+        font-size: 32px;
+    }
+    .data-table-wrapper {
+        padding: 15px;
+    }
+    .data-table-wrapper .header-table {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .topbar .search { width: 140px; }
+    .admin-search-dropdown { width: 250px; left: auto; right: 0; }
+    .movie-title-text {
+        max-width: 120px;
+    }
+    .topbar .user-profile span {
+        display: none; /* Ẩn tên user trên màn hình quá nhỏ để nhường chỗ cho logo/nút bấm */
+    }
+    .topbar .user-profile img {
+        width: 35px;
+        height: 35px;
+    }
+}
+
+/* KẾT QUẢ TÌM KIẾM AJAX ADMIN */
+.admin-search-dropdown {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    width: 100%;
+    background: #1a1d21;
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+}
+
+.admin-search-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-bottom: 1px solid #2a2d31;
+    transition: 0.2s;
+}
+
+.admin-search-item:last-child {
+    border-bottom: none;
+}
+
+.admin-search-item:hover {
+    background: #24282d;
+}
+
+.admin-search-item img {
+    width: 40px;
+    height: 55px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.admin-search-item .info .title {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.admin-search-item .info small {
+    color: #888;
+    font-size: 12px;
+}
+
+.admin-search-item div {
+    color: #888;
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+}

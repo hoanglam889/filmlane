@@ -45,6 +45,13 @@
 
             <div class="form-row">
                 <div class="form-group">
+                    <label>Định dạng phim</label>
+                    <select name="is_series" class="form-control">
+                        <option value="0">Phim Lẻ (Single Movie)</option>
+                        <option value="1">Phim Bộ (Series)</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Loại Vietsub</label>
                     <select name="subtitle_type" class="form-control">
                         <option value="Vietsub">Vietsub</option>
@@ -52,6 +59,9 @@
                         <option value="Bản gốc">Bản gốc</option>
                     </select>
                 </div>
+            </div>
+
+            <div class="form-row">
                 <div class="form-group">
                     <label>Trạng thái</label>
                     <select name="status" class="form-control">

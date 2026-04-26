@@ -831,4 +831,14 @@ footer .footer-top{ background: url(../images/footer-bg.jpg) no-repeat; backgrou
     .card-horizontal .img-box { width: 100%; aspect-ratio: 16/9;} /* Cắt ảnh ngang cho đẹp trên mobile */
     .card-horizontal .action-buttons { flex-direction: column; }
     .card-horizontal .btn-watch, .card-horizontal .btn-remove { text-align: center; }
+}.site-nav-list .has-dropdown.force-hide .dropdown-menu {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.site-nav-list .has-dropdown.active-dropdown .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }

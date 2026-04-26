@@ -50,15 +50,4 @@
     </div>
 </form>
 
-<script>
-    // Script này để highlight đúng cái menu Thể Loại khi đang ở trang Thêm
-    document.addEventListener("DOMContentLoaded", function() {
-        const menuLinks = document.querySelectorAll('.menu a');
-        menuLinks.forEach(link => {
-            if (link.getAttribute('href').includes('category')) {
-                link.parentElement.classList.add('active');
-            }
-        });
-    });
-</script>
 @endsection

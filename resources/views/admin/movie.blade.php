@@ -8,11 +8,6 @@
         <h3>Kho Phim Của Sếp</h3>
         
         <div style="display: flex; gap: 15px; align-items: center;">
-            <div class="search-box-movie">
-                <i class="fa-solid fa-magnifying-glass"></i>
-                <input type="text" placeholder="Tìm tên phim...">
-            </div>
-            
             <a href="{{ route('admin.movie.create') }}" class="btn-add">
                 <i class="fa-solid fa-plus"></i> Thêm phim mới
             </a>
@@ -24,7 +19,7 @@
             <thead>
                 <tr>
                     <th>Phim</th>
-                    <th>Năm</th>
+                    <th class="hide-on-mobile">Năm</th>
                     <th>Trạng thái</th>
                     <th>Hành động</th>
                 </tr>
@@ -32,13 +27,23 @@
             <tbody>
                 @forelse ($movies as $movie)
                 <tr>
-                    <td>
-                        <img src="{{ asset($movie->image) }}" alt="Poster" class="poster-img">
-                        {{ $movie->title }}
+                    <td class="movie-cell">
+                        <div class="movie-info-cell">
+                            <img src="{{ asset($movie->image) }}" alt="Poster" class="poster-img" style="margin: 0; width: 45px; height: 65px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">
+                            <span class="movie-title-text" title="{{ $movie->title }}">
+                                {{ $movie->title }}
+                            </span>
+                        </div>
                     </td>
-                    <td>{{ $movie->year }} ({{ $movie->resolution }})</td>
+                    <td class="hide-on-mobile" style="white-space: nowrap;">
+                        {{ $movie->year }}
+                        <br>
+                        <small style="color: {{ $movie->is_series ? '#e2d703' : '#aaa' }}; font-weight: 600;">
+                            {{ $movie->is_series ? 'Phim Bộ' : 'Phim Lẻ' }}
+                        </small>
+                    </td>
                     
-                    <td>
+                    <td style="white-space: nowrap;">
                         @if($movie->status == 'active')
                             <span class="status active">Đang hiện</span>
                         @else
@@ -46,7 +51,7 @@
                         @endif
                     </td>
                     
-                    <td class="actions">
+                    <td class="actions" style="white-space: nowrap;">
                         <a href="{{ route('admin.movie.edit', $movie->id) }}" class="btn-edit" title="Chỉnh sửa">
                             <i class="fa-solid fa-pen"></i>
                         </a>

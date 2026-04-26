@@ -17,7 +17,14 @@ class MovieController extends Controller
     {
         $movie_trendings = Movie::where('is_trending', 1)->get();
         $is_upcomings = Movie::where('is_upcoming', 1)->get();
-        return view('index', compact('movie_trendings', 'is_upcomings'));
+        
+        // Lấy danh sách ID phim đã thích nếu user đã đăng nhập
+        $likedMovieIds = [];
+        if (Auth::check()) {
+            $likedMovieIds = Auth::user()->favoriteMovies()->pluck('movies.id')->toArray();
+        }
+
+        return view('index', compact('movie_trendings', 'is_upcomings', 'likedMovieIds'));
     }
 
     public function detail($slug)
@@ -125,14 +132,40 @@ class MovieController extends Controller
         $country = Country::where('slug', $slug)-> firstOrFail();
         $movies = Movie::where('country_id', $country->id)->orderBy('id', 'DESC')->paginate(12);
         $category_name = $country->title;
-        return View('filter_movie', compact('movies', 'category_name'));
+        
+        $likedMovieIds = Auth::check() ? Auth::user()->favoriteMovies()->pluck('movies.id')->toArray() : [];
+        
+        return View('filter_movie', compact('movies', 'category_name', 'likedMovieIds'));
     }
     public function filter_category($slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
         $movies = Movie::where('category_id', $category->id)->orderBy('id', 'DESC')->paginate(12);
         $category_name = $category->title;
-        return view('filter_movie', compact('movies', 'category_name'));
+        
+        $likedMovieIds = Auth::check() ? Auth::user()->favoriteMovies()->pluck('movies.id')->toArray() : [];
+        
+        return view('filter_movie', compact('movies', 'category_name', 'likedMovieIds'));
+    }
+
+    public function filter_movie()
+    {
+        $movies = Movie::where('is_series', 0)->orderBy('id', 'DESC')->paginate(12);
+        $category_name = 'Phim Lẻ';
+        
+        $likedMovieIds = Auth::check() ? Auth::user()->favoriteMovies()->pluck('movies.id')->toArray() : [];
+        
+        return view('filter_movie', compact('movies', 'category_name', 'likedMovieIds'));
+    }
+
+    public function filter_series()
+    {
+        $movies = Movie::where('is_series', 1)->orderBy('id', 'DESC')->paginate(12);
+        $category_name = 'Phim Bộ';
+        
+        $likedMovieIds = Auth::check() ? Auth::user()->favoriteMovies()->pluck('movies.id')->toArray() : [];
+        
+        return view('filter_movie', compact('movies', 'category_name', 'likedMovieIds'));
     }
 
     /**

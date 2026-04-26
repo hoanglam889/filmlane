@@ -35,7 +35,7 @@
                 </div>
                 <div class="date-time">
                     <span><i class="fa-solid fa-calendar-days"></i> {{ $movie->year }}</span>
-                    <span><i class="fa-regular fa-clock"></i> 115 min</span>
+                    <span><i class="fa-solid fa-eye"></i> {{ number_format($movie->views) }} views</span>
                 </div>
                 <p>{{ $movie->description }}</p>
                 <div class="detail-actions">

@@ -55,12 +55,12 @@
                 <div class="left-content">
                   <span>HD</span>
                   <div class="time-rating">
-                    <span><i class="fa-regular fa-clock"></i> 137 min</span>
+                    <span><i class="fa-solid fa-eye"></i> {{ number_format($is_upcoming->views) }}</span>
                     <span><i class="fa-solid fa-star"></i> 8.5</span>
                   </div>
                 </div>
-                <button class="like-btn" data-movie-id="{{ $is_upcoming->id }}" title="Lưu phim này">
-                  <i class="fa-regular fa-heart"></i>
+                <button class="like-btn {{ in_array($is_upcoming->id, $likedMovieIds ?? []) ? 'liked' : '' }}" data-movie-id="{{ $is_upcoming->id }}" title="Lưu phim này">
+                  <i class="{{ in_array($is_upcoming->id, $likedMovieIds ?? []) ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                 </button>
               </div>
             </li>
@@ -152,12 +152,12 @@
                 <div class="left-content">
                   <span>{{ $movie_trending -> resolution }}</span>
                   <div class="time-rating">
-                    <span><i class="fa-regular fa-clock"></i> 122 min</span>
+                    <span><i class="fa-solid fa-eye"></i> {{ number_format($movie_trending->views) }}</span>
                     <span><i class="fa-solid fa-star"></i> 7.8</span>
                   </div>
                 </div>
-                <button class="like-btn" data-movie-id="{{ $movie_trending->id }}" title="Lưu phim này">
-                  <i class="fa-regular fa-heart"></i>
+                <button class="like-btn {{ in_array($movie_trending->id, $likedMovieIds ?? []) ? 'liked' : '' }}" data-movie-id="{{ $movie_trending->id }}" title="Lưu phim này">
+                  <i class="{{ in_array($movie_trending->id, $likedMovieIds ?? []) ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
                 </button>
               </div>
             </li>

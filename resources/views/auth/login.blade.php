@@ -55,11 +55,11 @@
             </div>
 
             <div class="grid grid-cols-2 gap-3">
-                <a href="{{ url('auth/google') }}" class="flex items-center justify-center gap-2 border border-gray-300 bg-white py-2 px-4 rounded-md hover:bg-gray-50 transition">
-                    <img src="https://www.svgrepo.com/show/355037/google.svg" class="w-5 h-5" alt="Google">
+                <a href="{{ route('google.login') }}" class="flex items-center justify-center gap-2 border border-gray-300 bg-white py-2 px-4 rounded-md hover:bg-gray-50 transition">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
                     <span class="text-sm font-semibold text-gray-700">Google</span>
                 </a>
-                <a href="{{ url('auth/facebook') }}" class="flex items-center justify-center gap-2 bg-[#1877F2] py-2 px-4 rounded-md hover:bg-[#166fe5] transition text-white">
+                <a href="javascript:void(0)" onclick="alert('Tính năng đăng nhập bằng Facebook đang được bảo trì. Sếp vui lòng sử dụng Google để đăng nhập nhé!')" class="flex items-center justify-center gap-2 bg-[#1877F2] py-2 px-4 rounded-md hover:bg-[#166fe5] transition text-white">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/2021_Facebook_icon.svg" class="w-5 h-5" alt="Facebook">
                     <span>Facebook</span>
                 </a>

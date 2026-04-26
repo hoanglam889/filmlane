@@ -25,6 +25,7 @@ class Movie extends Model
         'is_trending',
         'status',
         'type',
+        'is_series',
     ];
     public function episodes()
     {

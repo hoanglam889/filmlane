@@ -73,19 +73,4 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Tìm đúng mục Quản lý Thể loại trong menu dựa trên href
-        const currentUrl = window.location.href;
-        const menuLinks = document.querySelectorAll('.menu a');
-        
-        menuLinks.forEach(link => {
-            if (currentUrl.includes(link.getAttribute('href'))) {
-                link.parentElement.classList.add('active');
-            } else {
-                link.parentElement.classList.remove('active');
-            }
-        });
-    });
-</script>
 @endsection

@@ -45,10 +45,10 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label>Loại phim</label>
-                    <select name="type" class="form-control">
-                        <option value="single" {{ $movie->type == 'movie' ? 'selected' : '' }}>Phim Lẻ (Movie)</option>
-                        <option value="series" {{ $movie->type == 'series' ? 'selected' : '' }}>Phim Bộ (Series)</option>
+                    <label>Định dạng phim</label>
+                    <select name="is_series" class="form-control">
+                        <option value="0" {{ $movie->is_series == 0 ? 'selected' : '' }}>Phim Lẻ (Movie)</option>
+                        <option value="1" {{ $movie->is_series == 1 ? 'selected' : '' }}>Phim Bộ (Series)</option>
                     </select>
                 </div>
                 <div class="form-group">

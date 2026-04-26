@@ -50,9 +50,9 @@
                 <thead>
                     <tr>
                         <th>Phim</th>
-                        <th>Năm</th>
-                        <th>Chất lượng</th>
-                        <th>Lượt xem</th>
+                        <th class="hide-on-mobile">Năm</th>
+                        <th class="hide-on-mobile">Chất lượng</th>
+                        <th class="hide-on-mobile">Lượt xem</th>
                         <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
@@ -60,21 +60,27 @@
                 <tbody>
                     @foreach ($movies as $movie)
                     <tr>
-                        <td>
-                            <img src="{{ asset($movie->image) }}" class="poster-img">
-                            {{ $movie->title }}
+                        <td class="movie-cell">
+                            <div class="movie-info-cell">
+                                <img src="{{ asset($movie->image) }}" class="poster-img" style="margin: 0; width: 45px; height: 65px; object-fit: cover; border-radius: 4px; flex-shrink: 0;">
+                                <span class="movie-title-text" title="{{ $movie->title }}">
+                                    {{ $movie->title }}
+                                </span>
+                            </div>
                         </td>
-                        <td>{{ $movie->year }}</td>
-                        <td>{{ $movie->resolution }}</td>
-                        <td>1,240</td>
+                        <td class="hide-on-mobile" style="white-space: nowrap;">{{ $movie->year }}</td>
+                        <td class="hide-on-mobile" style="white-space: nowrap;">{{ $movie->resolution }}</td>
+                        <td class="hide-on-mobile" style="white-space: nowrap;">1,240</td>
                         
+                        <td style="white-space: nowrap;">
                         @if($movie->status == 'active')
-                            <td><span class="status active">Đang hiện</span></td>
+                            <span class="status active">Đang hiện</span>
                         @else
-                            <td><span class="status draft">Đang ẩn</span></td>
+                            <span class="status draft">Đang ẩn</span>
                         @endif
+                        </td>
                         
-                        <td class="actions">
+                        <td class="actions" style="white-space: nowrap;">
                             <a href="{{ route('admin.movie.edit', $movie->id) }}" class="btn-edit" title="Sửa">
                                 <i class="fa-solid fa-pen"></i>
                             </a>

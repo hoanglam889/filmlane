@@ -27,12 +27,12 @@
               <div class="left-content">
                 <span>{{ $movie->resolution ?? 'HD' }}</span>
                 <div class="time-rating">
-                  <span><i class="fa-regular fa-clock"></i> 120 min</span>
+                  <span><i class="fa-solid fa-eye"></i> {{ number_format($movie->views) }}</span>
                   <span><i class="fa-solid fa-star"></i> 8.5</span>
                 </div>
               </div>
-              <button class="like-btn" data-movie-id="{{ $movie->id }}" title="Lưu phim này">
-                <i class="fa-regular fa-heart"></i>
+              <button class="like-btn {{ in_array($movie->id, $likedMovieIds ?? []) ? 'liked' : '' }}" data-movie-id="{{ $movie->id }}" title="Lưu phim này">
+                <i class="{{ in_array($movie->id, $likedMovieIds ?? []) ? 'fa-solid' : 'fa-regular' }} fa-heart"></i>
               </button>
             </div>
           </li>

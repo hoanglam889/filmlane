@@ -203,34 +203,27 @@ document.addEventListener("DOMContentLoaded", function() {
             console.log("🚀 Đã tóm được phim ID: " + movieId + ". Chờ 5 giây để lưu...");
 
             setTimeout(() => {
-                // Kiểm tra đăng nhập trước khi lưu lịch sử
-                fetch('/api/check-auth')
-                    .then(res => res.json())
-                    .then(authData => {
-                        if (!authData.authenticated) {
-                            console.log("ℹ️ Chưa đăng nhập, bỏ qua lưu lịch sử.");
-                            return;
-                        }
-                        return fetch('/user/save-history', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json',
-                                'X-CSRF-TOKEN': token
-                            },
-                            body: JSON.stringify({ movie_id: movieId })
-                        });
+                // Gửi request thẳng lên server (Server sẽ tự check auth bên trong)
+                fetch('/user/save-history', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({ 
+                        movie_id: movieId,
+                        episode_id: window.currentEpisodeId || null // Gửi thêm ID tập phim nếu đang xem
                     })
-                    .then(res => {
-                        if (!res) return;
-                        return res.json();
-                    })
-                    .then(data => {
-                        if (!data) return;
-                        console.log("✅ LƯU THÀNH CÔNG: " + data.message);
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        console.log("✅ HOÀN TẤT: " + data.message);
                         isSaved = true;
-                    })
-                    .catch(err => console.error("❌ LỖI POST:", err));
+                    }
+                })
+                .catch(err => console.error("❌ LỖI KHI GỬI ACTIVITY:", err));
             }, 5000);
         }
     });

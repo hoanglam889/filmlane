@@ -20,6 +20,19 @@ class MovieController extends Controller
         return view('admin.movie', compact('movies')); 
         // (Chỗ này tuỳ ông lưu file view ở đâu nha, nếu lưu ở resources/views/admin/movie.blade.php thì đổi thành 'admin.movie')
     }
+
+    public function searchAjax(Request $request)
+    {
+        $keyword = $request->get('keyword');
+        
+        $movies = Movie::where('title', 'LIKE', '%' . $keyword . '%')
+                       ->orderBy('id', 'DESC')
+                       ->limit(8) 
+                       ->get();
+
+        return response()->json($movies);
+    }
+
     public function create()
     {
         //2 dòng này để truy vấn dropdown
@@ -43,6 +56,7 @@ class MovieController extends Controller
         $movie->status = $request->status;
         $movie->category_id = $request->category_id;
         $movie->country_id = $request->country_id;
+        $movie->is_series = $request->is_series;
         
         // Riêng thằng Checkbox (Trending), nếu có tích thì là 1, không tích thì là 0
         $movie->is_trending = $request->is_trending ? 1 : 0; 
@@ -104,6 +118,7 @@ class MovieController extends Controller
         $movie->resolution = $request->resolution;
         $movie->status = $request->status;
         $movie->category_id = $request->category_id;
+        $movie->is_series = $request->is_series;
         $movie->type = $request->type;
         
         $movie->is_trending = $request->has('is_trending') ? 1 : 0;

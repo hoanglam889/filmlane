@@ -80,14 +80,6 @@ document.addEventListener('click', function(e) {
         dropdown.classList.remove('active');
     }
 });
-//click vào lại chữ thì đóng
-document.addEventListener('click', function(e) {
-    const searchBox = document.querySelector('.search-box');
-    const dropdown = document.getElementById('searchDropdown');
-    if (searchBox && dropdown && !searchBox.contains(e.target)) {
-        dropdown.classList.remove('active');
-    }
-});
 });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -96,19 +88,66 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if(userBtn && dropdown) {
         userBtn.addEventListener('click', function(e) {
-            // Ngăn việc click bị "trượt" hoặc ảnh hưởng tới các thành phần khác
             e.preventDefault(); 
             e.stopPropagation();
-
-            // Bật/tắt class 'show' để hiện/ẩn menu
             dropdown.classList.toggle('show');
         });
 
-        // Nếu click ra ngoài vùng menu thì tự động ẩn nó đi (rất tiện)
         document.addEventListener('click', function(event) {
             if (!userBtn.contains(event.target) && !dropdown.contains(event.target)) {
                 dropdown.classList.remove('show');
             }
         });
     }
+
+    // XỬ LÝ CLICK DROPDOWN (THỂ LOẠI / QUỐC GIA) TRÊN MOBILE & DESKTOP
+    const navDropdowns = document.querySelectorAll('.has-dropdown');
+    navDropdowns.forEach(dropdown => {
+        const link = dropdown.querySelector('a');
+        
+        if (link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Chuẩn bị mở thì phải bỏ force-hide đi trước
+                dropdown.classList.remove('force-hide');
+                
+                // Close other dropdowns
+                navDropdowns.forEach(d => {
+                    if (d !== dropdown) {
+                        d.classList.remove('active-dropdown');
+                        d.classList.add('force-hide'); // Đóng hẳn các tab khác
+                        const dLink = d.querySelector('a');
+                        if (dLink) dLink.blur();
+                    }
+                });
+
+                // Toggle current dropdown
+                const isActive = dropdown.classList.toggle('active-dropdown');
+                if (!isActive) {
+                    // Nếu tắt đi thì xóa focus và ép ẩn vĩnh viễn (để chống dính hover trên mobile)
+                    link.blur();
+                    dropdown.classList.add('force-hide');
+                }
+            });
+
+            // Khi chuột di chuyển vào (Desktop) thì bỏ force-hide để hover hoạt động
+            dropdown.addEventListener('mouseenter', function() {
+                dropdown.classList.remove('force-hide');
+            });
+        }
+    });
+
+    // Click ra ngoài thì đóng các menu xổ xuống
+    document.addEventListener('click', function(event) {
+        navDropdowns.forEach(dropdown => {
+            if (!dropdown.contains(event.target)) {
+                dropdown.classList.remove('active-dropdown');
+                dropdown.classList.add('force-hide'); // Ép ẩn
+                const link = dropdown.querySelector('a');
+                if (link) link.blur();
+            }
+        });
+    });
 });

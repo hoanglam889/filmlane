@@ -78,31 +78,4 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // --- LOGIC NHUỘM VÀNG SIDEBAR THEO URL ---
-        // Lấy đúng mục Quản lý tập phim để làm vàng, xóa vàng mấy mục khác
-        const currentUrl = window.location.href;
-        const menuItems = document.querySelectorAll('.menu li');
-
-        menuItems.forEach(li => {
-            const link = li.querySelector('a');
-            if (link && (currentUrl.includes('episode_list') || currentUrl.includes('admin/episode'))) {
-                // Kiểm tra nếu link này đúng là link dẫn tới episode_list
-                if (link.href.includes('episode_list') || link.innerText.includes('Quản lý Tập phim')) {
-                    li.classList.add('active'); // Thêm class để ăn CSS template
-                    li.style.backgroundColor = '#f1c40f'; // Ép màu vàng cho chắc
-                    li.style.borderRadius = '8px';
-                    li.style.margin = '5px 10px';
-                    link.style.color = '#000';
-                    link.style.fontWeight = 'bold';
-                } else {
-                    // Gỡ class active của những thằng khác (như Quản lý phim)
-                    li.classList.remove('active');
-                    li.style.backgroundColor = '';
-                }
-            }
-        });
-    });
-</script>
 @endsection

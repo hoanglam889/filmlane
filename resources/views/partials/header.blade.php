@@ -68,8 +68,16 @@
               </ul>
           </li>
 
-          <li><a href="/phim-le">Phim lẻ</a></li>
-          <li><a href="/phim-bo">Phim bộ</a></li>
+          <li>
+              <a href="{{ route('filter_movie') }}" style="{{ Request::is('phim-le') ? 'color: #e2d703;' : '' }}">
+                  Phim lẻ
+              </a>
+          </li>
+          <li>
+              <a href="{{ route('filter_series') }}" style="{{ Request::is('phim-bo') ? 'color: #e2d703;' : '' }}">
+                  Phim bộ
+              </a>
+          </li>
           
           @if(Auth::check())
     <li class="user-menu-dropdown">

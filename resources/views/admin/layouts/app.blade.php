@@ -29,8 +29,12 @@
                 </li>
                 <li class="{{ Request::is('admin/category*') ? 'active' : '' }}">
                     <a href="{{ route('admin.category') }}"><i class="fa-solid fa-list"></i> Danh mục</a></li>
+                <li class="{{ Request::is('admin/country*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.country') }}"><i class="fa-solid fa-earth-americas"></i> Quốc gia</a></li>
                 <li class="{{ Request::is('admin/episode*') ? 'active' : '' }}"><a href="{{ route('admin.episode_index') }}"><i class="fa-solid fa-play"></i> Quản lý Tập phim</a></li>
-                <li><a href="#"><i class="fa-solid fa-users"></i> Người dùng</a></li>
+                <li class="{{ Request::is('admin/user*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.user') }}"><i class="fa-solid fa-users"></i> Người dùng</a>
+                </li>
             </ul>
             <div class="logout">
                 <form method="POST" action="{{ route('logout') }}">
@@ -50,15 +54,16 @@
             <header class="topbar">
                 <div style="display: flex; align-items: center; gap: 20px;">
                     <i class="fa-solid fa-bars hamburger-menu" id="hamburgerMenu"></i>
-                    <!-- <div class="search">
+                    <div class="search" style="position: relative;">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" placeholder="Tìm kiếm phim, người dùng...">
-                    </div> -->
+                        <input type="text" id="adminLiveSearch" placeholder="Tìm kiếm phim nhanh..." autocomplete="off">
+                        <div id="adminSearchDropdown" class="admin-search-dropdown"></div>
+                    </div>
                 </div>
                 
                 <div class="user-profile">
                     @if(Auth::user()->role == 1)
-                    <span>Chào sếp, Admin!</span>
+                    <span>Chào sếp, {{ Auth::user()->name }}!</span>
                     <img src="{{ asset(Auth::user()->avatar) }}" alt="Admin">
                     @endif
                     
@@ -95,6 +100,55 @@
             if(hamburger) hamburger.addEventListener('click', toggleSidebar);
             if(closeBtn) closeBtn.addEventListener('click', toggleSidebar);
             if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+            // ================= LOGIC TÌM KIẾM AJAX (REUSE TỪ FRONTEND) =================
+            const adminSearch = document.getElementById('adminLiveSearch');
+            const adminDropdown = document.getElementById('adminSearchDropdown');
+            let searchTimeout = null;
+
+            if (adminSearch && adminDropdown) {
+                adminSearch.addEventListener('input', function() {
+                    const keyword = this.value.trim();
+                    clearTimeout(searchTimeout);
+
+                    if (keyword.length > 0) {
+                        adminDropdown.style.display = 'block';
+                        adminDropdown.innerHTML = '<div class="admin-search-item">Đang tìm...</div>';
+
+                        searchTimeout = setTimeout(() => {
+                            fetch(`/admin/movie/search-ajax?keyword=${encodeURIComponent(keyword)}`)
+                                .then(res => res.json())
+                                .then(data => {
+                                    adminDropdown.innerHTML = '';
+                                    if (data.length > 0) {
+                                        data.forEach(movie => {
+                                            adminDropdown.innerHTML += `
+                                                <a href="/admin/movie/${movie.id}/edit" class="admin-search-item">
+                                                    <img src="/${movie.image}" alt="">
+                                                    <div class="info">
+                                                        <div class="title">${movie.title}</div>
+                                                        <small>${movie.year} • ${movie.is_series ? 'Phim Bộ' : 'Phim Lẻ'}</small>
+                                                    </div>
+                                                </a>
+                                            `;
+                                        });
+                                    } else {
+                                        adminDropdown.innerHTML = '<div class="admin-search-item">Không thấy phim này sếp ơi!</div>';
+                                    }
+                                });
+                        }, 400);
+                    } else {
+                        adminDropdown.style.display = 'none';
+                    }
+                });
+
+                // Tắt dropdown khi click ra ngoài
+                document.addEventListener('click', function(e) {
+                    if (!adminSearch.contains(e.target) && !adminDropdown.contains(e.target)) {
+                        adminDropdown.style.display = 'none';
+                    }
+                });
+            }
         });
     </script>
 
