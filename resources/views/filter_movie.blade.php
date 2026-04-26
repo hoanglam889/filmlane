@@ -28,7 +28,7 @@
                 <span>{{ $movie->resolution ?? 'HD' }}</span>
                 <div class="time-rating">
                   <span><i class="fa-solid fa-eye"></i> {{ number_format($movie->views) }}</span>
-                  <span><i class="fa-solid fa-star"></i> 8.5</span>
+                  <span><i class="fa-solid fa-star"></i> {{ number_format($movie->ratings_avg_rating ?? 0, 1) }}</span>
                 </div>
               </div>
               <button class="like-btn {{ in_array($movie->id, $likedMovieIds ?? []) ? 'liked' : '' }}" data-movie-id="{{ $movie->id }}" title="Lưu phim này">

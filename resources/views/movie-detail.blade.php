@@ -19,18 +19,11 @@
                 </i>
             </div>
             <div class="content">
-                <strong>New Episodes</strong>
                 <h4>{{ $movie->title }}</h4>
                 <div class="badge-genre">
                     <div class="badge">
                         <span>PG 13</span>
                         <span>{{ $movie->resolution }}  </span>
-                    </div>
-                    <div class="genre">
-                        <a href="">Comedy</a>,
-                        <a href="">Action</a>,
-                        <a href="">Adventure</a>,
-                        <a href="">Science Fiction</a>
                     </div>
                 </div>
                 <div class="date-time">
@@ -186,8 +179,39 @@
         <div class="container" style="max-width: 1200px;">
             <div class="row">
                 
-                <!-- CỘT TRÁI: BÌNH LUẬN -->
+                <!-- CỘT TRÁI: ĐÁNH GIÁ & BÌNH LUẬN -->
                 <div class="col-lg-8 col-12 mb-5 mb-lg-0">
+                    
+                    <!-- KHU VỰC VOTE SAO -->
+                    <div class="rating-section mb-4" style="background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 20px;">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="avg-score text-center" style="background: #e2d703; color: #111; padding: 10px 15px; border-radius: 8px;">
+                                    <div style="font-size: 24px; font-weight: 800; line-height: 1;">{{ number_format($averageRating, 1) }}</div>
+                                    <div style="font-size: 10px; font-weight: 700; text-transform: uppercase;">/ 5 Sao</div>
+                                </div>
+                                <div>
+                                    <h5 style="color: #fff; margin-bottom: 5px; font-size: 16px; font-weight: 700;">Đánh giá phim</h5>
+                                    <div style="color: #cecaca; font-size: 13px;">{{ $ratingCount }} lượt đánh giá</div>
+                                </div>
+                            </div>
+
+                            <div class="star-rating-wrapper">
+                                <div class="stars d-flex gap-1" id="star-rating" data-movie-id="{{ $movie->id }}">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i class="{{ $i <= round($averageRating) ? 'fa-solid' : 'fa-regular' }} fa-star star-item" 
+                                           data-value="{{ $i }}" 
+                                           style="font-size: 28px; color: {{ $i <= $userRating ? '#e2d703' : ($i <= round($averageRating) ? '#e2d703' : '#444') }}; cursor: pointer; transition: 0.2s;">
+                                        </i>
+                                    @endfor
+                                </div>
+                                <div id="rating-status" class="mt-2 text-end" style="font-size: 12px; color: #e2d703; font-weight: 600; height: 18px;">
+                                    {{ $userRating > 0 ? 'Bạn đã đánh giá ' . $userRating . ' sao' : '' }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #fff;">Bình luận</h3>
 
                     @if(session('success'))
@@ -598,6 +622,79 @@
                 console.error(err);
             });
         }
+
+        // --- XỬ LÝ VOTE SAO ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('.star-item');
+            const ratingStatus = document.getElementById('rating-status');
+            const starContainer = document.getElementById('star-rating');
+            const movieId = starContainer.getAttribute('data-movie-id');
+
+            stars.forEach(star => {
+                // Hiệu ứng Hover vào
+                star.addEventListener('mouseover', function() {
+                    const value = this.getAttribute('data-value');
+                    resetStars();
+                    highlightStars(value);
+                });
+
+                // Hiệu ứng Hover ra
+                star.addEventListener('mouseout', function() {
+                    resetStars();
+                    // Trả lại trạng thái ban đầu (điểm trung bình hoặc điểm user đã vote)
+                    const originalValue = {{ $userRating > 0 ? $userRating : round($averageRating) }};
+                    highlightStars(originalValue);
+                });
+
+                // Xử lý Click để Vote
+                star.addEventListener('click', function() {
+                    const value = this.getAttribute('data-value');
+                    
+                    fetch('/movie/rate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            movie_id: movieId,
+                            rating: value
+                        })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            ratingStatus.innerText = 'Cảm ơn bạn đã đánh giá ' + value + ' sao!';
+                            // Reload nhẹ sau 1s để cập nhật điểm trung bình mới
+                            setTimeout(() => location.reload(), 1200);
+                        } else {
+                            alert(data.message || 'Vui lòng đăng nhập để đánh giá!');
+                            if (data.message === 'Unauthorized') window.location.href = '/login';
+                        }
+                    })
+                    .catch(err => console.error('Error:', err));
+                });
+            });
+
+            function highlightStars(count) {
+                stars.forEach(s => {
+                    if (s.getAttribute('data-value') <= count) {
+                        s.classList.remove('fa-regular');
+                        s.classList.add('fa-solid');
+                        s.style.color = '#e2d703';
+                    }
+                });
+            }
+
+            function resetStars() {
+                stars.forEach(s => {
+                    s.classList.remove('fa-solid');
+                    s.classList.add('fa-regular');
+                    s.style.color = '#444';
+                });
+            }
+        });
     </script>
     <!-- ============================================== -->
     <!-- KẾT THÚC KHU VỰC BÌNH LUẬN                      -->

@@ -10,13 +10,14 @@ use App\Models\Country;
 use App\Models\Favorite;
 use App\Models\WatchHistory;
 use App\Models\Comment;
+use App\Models\Rating;
 use Illuminate\Support\Facades\Auth;
 class MovieController extends Controller
 {
     public function index()
     {
-        $movie_trendings = Movie::where('is_trending', 1)->get();
-        $is_upcomings = Movie::where('is_upcoming', 1)->get();
+        $movie_trendings = Movie::where('is_trending', 1)->withAvg('ratings', 'rating')->get();
+        $is_upcomings = Movie::where('is_upcoming', 1)->withAvg('ratings', 'rating')->get();
         
         // Lấy danh sách ID phim đã thích nếu user đã đăng nhập
         $likedMovieIds = [];
@@ -35,7 +36,6 @@ class MovieController extends Controller
         $episodes = Episode::where('movie_id', $movie->id)
                         ->orderBy('episode_number')
                         ->get();
-                        
         $comments = Comment::with(['user', 'replies.user' => function($query) {
             $query->orderBy('created_at', 'asc');
         }])
@@ -44,7 +44,18 @@ class MovieController extends Controller
         ->latest()
         ->get();
 
-        return view('movie-detail', compact('movie', 'episodes', 'comments'));
+        // 1. Tính điểm trung bình (Laravel tự làm bằng withAvg)
+        $averageRating = $movie->ratings()->avg('rating') ?: 0;
+        // 2. Tổng số lượt vote
+        $ratingCount = $movie->ratings()->count();
+        // 3. Lấy điểm của User hiện tại (nếu có)
+        $userRating = 0;
+        if (Auth::check()) {
+            $ratingRecord = $movie->ratings()->where('user_id', Auth::id())->first();
+            $userRating = $ratingRecord ? $ratingRecord->rating : 0;
+        }
+
+        return view('movie-detail', compact('movie', 'episodes', 'comments', 'averageRating', 'ratingCount', 'userRating'));
     }
 
     public function storeComment(Request $request, $movieId)
@@ -130,7 +141,7 @@ class MovieController extends Controller
 
     public function filter_country($slug){
         $country = Country::where('slug', $slug)-> firstOrFail();
-        $movies = Movie::where('country_id', $country->id)->orderBy('id', 'DESC')->paginate(12);
+        $movies = Movie::where('country_id', $country->id)->withAvg('ratings', 'rating')->orderBy('id', 'DESC')->paginate(12);
         $category_name = $country->title;
         
         $likedMovieIds = Auth::check() ? Auth::user()->favoriteMovies()->pluck('movies.id')->toArray() : [];
@@ -140,7 +151,7 @@ class MovieController extends Controller
     public function filter_category($slug)
     {
         $category = Category::where('slug', $slug)->firstOrFail();
-        $movies = Movie::where('category_id', $category->id)->orderBy('id', 'DESC')->paginate(12);
+        $movies = Movie::where('category_id', $category->id)->withAvg('ratings', 'rating')->orderBy('id', 'DESC')->paginate(12);
         $category_name = $category->title;
         
         $likedMovieIds = Auth::check() ? Auth::user()->favoriteMovies()->pluck('movies.id')->toArray() : [];
@@ -150,7 +161,7 @@ class MovieController extends Controller
 
     public function filter_movie()
     {
-        $movies = Movie::where('is_series', 0)->orderBy('id', 'DESC')->paginate(12);
+        $movies = Movie::where('is_series', 0)->withAvg('ratings', 'rating')->orderBy('id', 'DESC')->paginate(12);
         $category_name = 'Phim Lẻ';
         
         $likedMovieIds = Auth::check() ? Auth::user()->favoriteMovies()->pluck('movies.id')->toArray() : [];
@@ -160,7 +171,7 @@ class MovieController extends Controller
 
     public function filter_series()
     {
-        $movies = Movie::where('is_series', 1)->orderBy('id', 'DESC')->paginate(12);
+        $movies = Movie::where('is_series', 1)->withAvg('ratings', 'rating')->orderBy('id', 'DESC')->paginate(12);
         $category_name = 'Phim Bộ';
         
         $likedMovieIds = Auth::check() ? Auth::user()->favoriteMovies()->pluck('movies.id')->toArray() : [];
@@ -234,5 +245,35 @@ class MovieController extends Controller
         return view('user.history', compact('movies'));
     }
 
+    /**
+     * Handle movie rating
+     */
+    public function rate(Request $request)
+    {
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+        }
+
+        $request->validate([
+            'movie_id' => 'required|exists:movies,id',
+            'rating' => 'required|integer|min:1|max:5'
+        ]);
+
+        $rating = Rating::updateOrCreate(
+            [
+                'user_id' => Auth::id(),
+                'movie_id' => $request->movie_id,
+            ],
+            [
+                'rating' => $request->rating,
+            ]
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Đánh giá thành công!',
+            'rating' => $rating->rating
+        ]);
+    }
 }
 

@@ -131,6 +131,7 @@ Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebook
 // API Routes for Like/Save functionality
 Route::get('/api/check-auth', [App\Http\Controllers\MovieController::class, 'checkAuth']);
 Route::post('/api/toggle-like', [App\Http\Controllers\MovieController::class, 'toggleLike'])->middleware('auth');
+Route::post('/movie/rate', [App\Http\Controllers\MovieController::class, 'rate']);
 
 // Profile routes
 Route::middleware('auth')->group(function () {

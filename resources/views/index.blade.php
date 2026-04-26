@@ -56,7 +56,7 @@
                   <span>HD</span>
                   <div class="time-rating">
                     <span><i class="fa-solid fa-eye"></i> {{ number_format($is_upcoming->views) }}</span>
-                    <span><i class="fa-solid fa-star"></i> 8.5</span>
+                    <span><i class="fa-solid fa-star"></i> {{ number_format($is_upcoming->ratings_avg_rating ?? 0, 1) }}</span>
                   </div>
                 </div>
                 <button class="like-btn {{ in_array($is_upcoming->id, $likedMovieIds ?? []) ? 'liked' : '' }}" data-movie-id="{{ $is_upcoming->id }}" title="Lưu phim này">
@@ -153,7 +153,7 @@
                   <span>{{ $movie_trending -> resolution }}</span>
                   <div class="time-rating">
                     <span><i class="fa-solid fa-eye"></i> {{ number_format($movie_trending->views) }}</span>
-                    <span><i class="fa-solid fa-star"></i> 7.8</span>
+                    <span><i class="fa-solid fa-star"></i> {{ number_format($movie_trending->ratings_avg_rating ?? 0, 1) }}</span>
                   </div>
                 </div>
                 <button class="like-btn {{ in_array($movie_trending->id, $likedMovieIds ?? []) ? 'liked' : '' }}" data-movie-id="{{ $movie_trending->id }}" title="Lưu phim này">
