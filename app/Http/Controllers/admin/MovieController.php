@@ -57,6 +57,7 @@ class MovieController extends Controller
         $movie->category_id = $request->category_id;
         $movie->country_id = $request->country_id;
         $movie->is_series = $request->is_series;
+        $movie->type = $request->type;
         
         // Riêng thằng Checkbox (Trending), nếu có tích thì là 1, không tích thì là 0
         $movie->is_trending = $request->is_trending ? 1 : 0; 
@@ -129,7 +130,7 @@ class MovieController extends Controller
             $file = $request->file('image');
             $extension = $file->getClientOriginalExtension();
             $filename = time() . '.' . $extension;
-            $file->move(public_path('uploads/movies/'), $filename);
+            $file->move(public_path('images/movies/'), $filename);
             
             // Nếu có ảnh cũ (và không phải ảnh mặc định) thì xóa file ảnh cũ cho nhẹ máy
             if(file_exists(public_path($movie->image)) && $movie->image != 'uploads/movies/default.jpg'){
@@ -137,7 +138,7 @@ class MovieController extends Controller
             }
 
             // Gán đường dẫn ảnh mới
-            $movie->image = 'uploads/movies/' . $filename;
+            $movie->image = 'images/movies/' . $filename;
         }
 
         $movie->save();

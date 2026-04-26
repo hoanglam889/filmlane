@@ -52,6 +52,13 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>Phân loại (Type)</label>
+                    <select name="type" class="form-control" required>
+                        <option value="single" {{ $movie->type == 'single' ? 'selected' : '' }}>Single (Phim lẻ)</option>
+                        <option value="series" {{ $movie->type == 'series' ? 'selected' : '' }}>Series (Phim bộ)</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label>Trạng thái</label>
                     <select name="status" class="form-control">
                         <option value="active" {{ $movie->status == 'active' ? 'selected' : '' }}>Đang hiện (Active)</option>
