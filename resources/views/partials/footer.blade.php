@@ -22,9 +22,10 @@
               <a href="#">Chính sách bảo mật</a>
             </div>
             <div class="social-links">
-              <a href="#"><i class="fa-brands fa-facebook"></i></a>
-              <a href="#"><i class="fa-brands fa-github"></i></a> <a href="#"><i class="fa-brands fa-youtube"></i></a>
-              <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+              <a href="https://www.facebook.com/phan.huynh.hoang.lam/"><i class="fa-brands fa-facebook"></i></a>
+              <a href="https://github.com/hoanglam889"><i class="fa-brands fa-github"></i></a> 
+              <!-- <a href="#"><i class="fa-brands fa-youtube"></i></a> -->
+              <!-- <a href="#"><i class="fa-brands fa-linkedin"></i></a> -->
             </div>
           </div>
         </div>

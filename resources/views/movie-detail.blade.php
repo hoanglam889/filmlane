@@ -343,45 +343,28 @@
                     <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px; color: #fff;">Có thể bạn sẽ thích</h3>
                     <div class="suggested-movies-list">
                         
-                        <!-- Phim gợi ý 1 -->
-                        <div style="display: flex; gap: 15px; background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='#e2d703'" onmouseout="this.style.borderColor='#2a343b'">
-                            <img src="https://via.placeholder.com/80x110/242c38/cecaca?text=Phim+1" style="width: 70px; height: 100px; object-fit: cover; border-radius: 4px;" alt="movie">
+                        @foreach($relatedMovies as $related)
+                        <!-- Phim gợi ý -->
+                        <div onclick="window.location.href='{{ url('/movie-detail/' . $related->slug) }}'" style="display: flex; gap: 15px; background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='#e2d703'" onmouseout="this.style.borderColor='#2a343b'">
+                            <img src="{{ asset($related->image) }}" style="width: 70px; height: 100px; object-fit: cover; border-radius: 4px;" alt="{{ $related->title }}">
                             <div style="display: flex; flex-direction: column; justify-content: center;">
-                                <h4 style="color: #fff; font-size: 15px; margin-bottom: 5px; font-weight: 600;">The Dark Knight</h4>
-                                <div style="color: #e2d703; font-size: 12px; margin-bottom: 5px;"><i class="fa-solid fa-star"></i> 9.0</div>
-                                <div><span style="border: 1px solid #444; color: #cecaca; font-size: 11px; padding: 2px 6px; border-radius: 3px;">Hành Động</span></div>
+                                <h4 style="color: #fff; font-size: 15px; margin-bottom: 5px; font-weight: 600;">{{ $related->title }}</h4>
+                                <div style="color: #e2d703; font-size: 12px; margin-bottom: 5px;">
+                                    <i class="fa-solid fa-star"></i> {{ number_format($related->ratings_avg_rating ?? 0, 1) }}
+                                    <span style="color: #666; margin-left: 10px;"><i class="fa-solid fa-eye"></i> {{ number_format($related->views) }}</span>
+                                </div>
+                                <div>
+                                    <span style="border: 1px solid #444; color: #cecaca; font-size: 11px; padding: 2px 6px; border-radius: 3px;">
+                                        {{ $related->year }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
+                        @endforeach
 
-                        <!-- Phim gợi ý 2 -->
-                        <div style="display: flex; gap: 15px; background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='#e2d703'" onmouseout="this.style.borderColor='#2a343b'">
-                            <img src="https://via.placeholder.com/80x110/242c38/cecaca?text=Phim+2" style="width: 70px; height: 100px; object-fit: cover; border-radius: 4px;" alt="movie">
-                            <div style="display: flex; flex-direction: column; justify-content: center;">
-                                <h4 style="color: #fff; font-size: 15px; margin-bottom: 5px; font-weight: 600;">Inception</h4>
-                                <div style="color: #e2d703; font-size: 12px; margin-bottom: 5px;"><i class="fa-solid fa-star"></i> 8.8</div>
-                                <div><span style="border: 1px solid #444; color: #cecaca; font-size: 11px; padding: 2px 6px; border-radius: 3px;">Viễn Tưởng</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Phim gợi ý 3 -->
-                        <div style="display: flex; gap: 15px; background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='#e2d703'" onmouseout="this.style.borderColor='#2a343b'">
-                            <img src="https://via.placeholder.com/80x110/242c38/cecaca?text=Phim+3" style="width: 70px; height: 100px; object-fit: cover; border-radius: 4px;" alt="movie">
-                            <div style="display: flex; flex-direction: column; justify-content: center;">
-                                <h4 style="color: #fff; font-size: 15px; margin-bottom: 5px; font-weight: 600;">Interstellar</h4>
-                                <div style="color: #e2d703; font-size: 12px; margin-bottom: 5px;"><i class="fa-solid fa-star"></i> 8.6</div>
-                                <div><span style="border: 1px solid #444; color: #cecaca; font-size: 11px; padding: 2px 6px; border-radius: 3px;">Khám Phá</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Phim gợi ý 4 -->
-                        <div style="display: flex; gap: 15px; background: #11141d; border: 1px solid #2a343b; border-radius: 6px; padding: 10px; margin-bottom: 15px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.borderColor='#e2d703'" onmouseout="this.style.borderColor='#2a343b'">
-                            <img src="https://via.placeholder.com/80x110/242c38/cecaca?text=Phim+4" style="width: 70px; height: 100px; object-fit: cover; border-radius: 4px;" alt="movie">
-                            <div style="display: flex; flex-direction: column; justify-content: center;">
-                                <h4 style="color: #fff; font-size: 15px; margin-bottom: 5px; font-weight: 600;">Avengers</h4>
-                                <div style="color: #e2d703; font-size: 12px; margin-bottom: 5px;"><i class="fa-solid fa-star"></i> 8.0</div>
-                                <div><span style="border: 1px solid #444; color: #cecaca; font-size: 11px; padding: 2px 6px; border-radius: 3px;">Hành Động</span></div>
-                            </div>
-                        </div>
+                        @if($relatedMovies->isEmpty())
+                            <p style="color: #666; font-size: 14px;">Chưa có phim gợi ý nào.</p>
+                        @endif
 
                     </div>
                 </div>

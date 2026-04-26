@@ -55,7 +55,15 @@ class MovieController extends Controller
             $userRating = $ratingRecord ? $ratingRecord->rating : 0;
         }
 
-        return view('movie-detail', compact('movie', 'episodes', 'comments', 'averageRating', 'ratingCount', 'userRating'));
+        // 4. Lấy phim liên quan (Cùng category, trừ phim hiện tại, sắp xếp theo views cao nhất)
+        $relatedMovies = Movie::where('category_id', $movie->category_id)
+                            ->where('id', '!=', $movie->id)
+                            ->withAvg('ratings', 'rating')
+                            ->orderBy('views', 'desc')
+                            ->take(4)
+                            ->get();
+
+        return view('movie-detail', compact('movie', 'episodes', 'comments', 'averageRating', 'ratingCount', 'userRating', 'relatedMovies'));
     }
 
     public function storeComment(Request $request, $movieId)
