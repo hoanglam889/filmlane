@@ -57,7 +57,6 @@ class MovieController extends Controller
         $movie->category_id = $request->category_id;
         $movie->country_id = $request->country_id;
         $movie->is_series = $request->is_series;
-        $movie->type = $request->type;
         
         // Riêng thằng Checkbox (Trending), nếu có tích thì là 1, không tích thì là 0
         $movie->is_trending = $request->is_trending ? 1 : 0; 
@@ -120,7 +119,6 @@ class MovieController extends Controller
         $movie->status = $request->status;
         $movie->category_id = $request->category_id;
         $movie->is_series = $request->is_series;
-        $movie->type = $request->type;
         
         $movie->is_trending = $request->has('is_trending') ? 1 : 0;
         $movie->is_top_rated = $request->has('is_top_rated') ? 1 : 0;

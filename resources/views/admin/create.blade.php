@@ -59,16 +59,6 @@
                         <option value="Bản gốc">Bản gốc</option>
                     </select>
                 </div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Phân loại (Type)</label>
-                    <select name="type" class="form-control" required>
-                        <option value="single">Single (Phim lẻ)</option>
-                        <option value="series">Series (Phim bộ)</option>
-                    </select>
-                </div>
                 <div class="form-group">
                     <label>Trạng thái</label>
                     <select name="status" class="form-control">
