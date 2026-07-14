@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: filmlane_app
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./.env:/var/www/html/.env
+      # Ánh xạ thư mục storage để lưu giữ file upload và logs không bị mất khi restart
+      - ./storage:/var/www/html/storage
+      # Ánh xạ thư mục database để lưu giữ file database.sqlite (nếu dùng SQLite)
+      - ./database:/var/www/html/database
